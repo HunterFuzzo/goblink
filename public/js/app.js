@@ -4,7 +4,10 @@ const STRIPE_CHECKOUT_URL = "https://buy.stripe.com/aFa14n1dh4dl5L5gXr6Ri00";
 const STRIPE_CHECKOUT_URL_MAX = "https://buy.stripe.com/bJe00j9JNaBJa1lgXr6Ri01";
 const MAC_DOWNLOAD_URL = (typeof window !== 'undefined' && window.location.protocol === 'file:')
   ? "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink.dmg"
-  : "/download";
+  : "/download/mac";
+const WIN_DOWNLOAD_URL = (typeof window !== 'undefined' && window.location.protocol === 'file:')
+  ? "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink-Setup.exe"
+  : "/download/windows";
 
 const TRANSLATIONS = {
   en: {
@@ -606,20 +609,32 @@ function setupLegalModal(triggerId, titleEn, titleFr, contentHtml) {
 }
 
 function initButtons() {
-  // Download buttons (Direct DMG installation - No GitHub redirect)
+  // Download buttons (Direct DMG / Windows EXE installation - No GitHub redirect)
+  const isWindows = typeof navigator !== 'undefined' && /Win/i.test(navigator.userAgent || navigator.platform);
   const downloadBtns = [document.getElementById('btnDownloadHero'), document.getElementById('btnFreeAction')];
+  
+  // If user is browsing on Windows, adapt hero button icon and label
+  const btnHero = document.getElementById('btnDownloadHero');
+  if (btnHero && isWindows) {
+    const winSvg = `<svg viewBox="0 0 88 88" width="18" height="18" fill="currentColor" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><path d="M0 12.402l35.687-4.86.016 34.423-35.67.203zm35.67 33.529l.028 34.453L.028 75.48.016 46.134zM39.75 6.945L87.31 0v41.332l-47.56.32zM87.31 46.108v41.378L39.75 80.53V46.332z"/></svg>`;
+    const isFr = (currentLang === 'fr');
+    btnHero.innerHTML = `${winSvg} ${isFr ? 'Télécharger pour Windows' : 'Download for Windows'}`;
+    btnHero.href = WIN_DOWNLOAD_URL;
+    btnHero.setAttribute('download', 'Blink-Setup.exe');
+  }
+
   downloadBtns.forEach(btn => {
     if (btn) {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         
-        const downloadUrl = (window.location.protocol === 'file:')
-          ? "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink.dmg"
-          : "/download";
+        const isWin = typeof navigator !== 'undefined' && /Win/i.test(navigator.userAgent || navigator.platform);
+        const fileName = isWin ? 'Blink-Setup.exe' : 'Blink.dmg';
+        const downloadUrl = isWin ? WIN_DOWNLOAD_URL : MAC_DOWNLOAD_URL;
 
         const tempLink = document.createElement('a');
         tempLink.href = downloadUrl;
-        tempLink.setAttribute('download', 'Blink.dmg');
+        tempLink.setAttribute('download', fileName);
         tempLink.style.display = 'none';
         document.body.appendChild(tempLink);
         tempLink.click();
