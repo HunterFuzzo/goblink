@@ -31,15 +31,17 @@ const TRANSLATIONS = {
     },
     modes: {
       capsLockTitle: "Caps Lock LED",
-      capsLockDesc: "Discreet green pulses flash the correct answer digit silently on your physical keyboard.",
-      iphoneTitle: "iPhone & Android Vibration",
-      iphoneDesc: "Tactile motor vibrations in your pocket with zero screen wake via local Wi-Fi pairing.",
+      capsLockDesc: "The keyboard LED blinks to indicate the answer number, with a 1-second pause between repeats.",
+      hudTitle: "Floating HUD",
+      hudDesc: "A discreet micro-overlay appears momentarily on your screen.",
+      hapticTitle: "Subtle Haptic",
+      hapticDesc: "Silent trackpad haptic pulses corresponding to the answer choice.",
+      menuBarTitle: "Menu Bar Icon",
+      menuBarDesc: "The macOS menu bar icon discreetly displays the detected answer number (1, 2, 3...).",
+      iphoneTitle: "iPhone Vibration",
+      iphoneDesc: "Your iPhone vibrates over local Wi-Fi based on the answer (1, 2, 3... pulses). Works while locked.",
       ipaBtn: "iPhone (.ipa)",
-      apkBtn: "Android (.apk)",
-      menuBarTitle: "Menu Bar Stealth",
-      menuBarDesc: "Minimalist dot signals in your macOS status bar, hidden from screen recording.",
-      hudTitle: "Subtle HUD",
-      hudDesc: "Floating ultra-low contrast overlay that stays invisible to screen sharing apps."
+      apkBtn: "Android (.apk)"
     },
     pricing: {
       titlePre: "Start",
@@ -51,7 +53,7 @@ const TRANSLATIONS = {
       freeLimit: "3 question analysis credits",
       freeFeatures: [
         "3 question analysis credits",
-        "All indication modes (Caps Lock LED, Floating HUD, iPhone Vibration)",
+        "All 5 indication modes (LED, HUD, Haptic, Menu Bar, iPhone)",
         "High-precision OCR & Instant AI",
         "No credit card required"
       ],
@@ -65,7 +67,7 @@ const TRANSLATIONS = {
       proLimit: "500 research per month",
       proFeatures: [
         "500 research",
-        "All modes (Caps Lock LED, iPhone Vibration, Menu Bar, HUD)",
+        "All 5 modes (Caps Lock LED, Floating HUD, Subtle Haptic, Menu Bar, iPhone)",
         "Stealth mode & unlimited access",
         "Instant response under 1 second",
         "Hardware-bound device activation"
@@ -154,15 +156,17 @@ const TRANSLATIONS = {
     },
     modes: {
       capsLockTitle: "LED Caps Lock",
-      capsLockDesc: "Des impulsions lumineuses indiquent silencieusement le numéro de la réponse sur votre clavier physique.",
+      capsLockDesc: "La LED du clavier clignote pour indiquer le numéro de la réponse, avec une pause d'1 seconde entre les répétitions.",
+      hudTitle: "HUD Flottant",
+      hudDesc: "Un micro-overlay discret apparaît momentanément sur votre écran.",
+      hapticTitle: "Haptique Subtil",
+      hapticDesc: "Des impulsions haptiques silencieuses sur le trackpad correspondant au choix de la réponse.",
+      menuBarTitle: "Icône Barre des Menus",
+      menuBarDesc: "L'icône dans la barre des menus macOS affiche discrètement le numéro de la réponse détectée (1, 2, 3...).",
       iphoneTitle: "Vibration iPhone & Android",
-      iphoneDesc: "Vibrations haptiques discrètes dans votre poche sans allumer l'écran via la synchronisation Wi-Fi locale.",
+      iphoneDesc: "Votre téléphone vibre en Wi-Fi local selon la réponse (1, 2, 3... impulsions). Fonctionne même verrouillé.",
       ipaBtn: "iPhone (.ipa)",
-      apkBtn: "Android (.apk)",
-      menuBarTitle: "Barre des menus",
-      menuBarDesc: "Des points discrets dans la barre des menus macOS, invisibles lors des partages d'écran.",
-      hudTitle: "Overlay HUD",
-      hudDesc: "Une fenêtre transparente ultra-basse opacité qui n'apparaît pas sur les enregistrements."
+      apkBtn: "Android (.apk)"
     },
     pricing: {
       titlePre: "Commencez",
@@ -174,7 +178,7 @@ const TRANSLATIONS = {
       freeLimit: "3 crédits d'analyse offerts",
       freeFeatures: [
         "3 crédits d'analyse de questions",
-        "Tous les modes inclus (LED Caps Lock, Overlay HUD, Vibration iPhone)",
+        "Tous les 5 modes (LED, HUD, Haptique, Barre des menus, iPhone)",
         "OCR haute précision & IA instantanée",
         "Aucune carte bancaire requise"
       ],
@@ -188,7 +192,7 @@ const TRANSLATIONS = {
       proLimit: "500 recherches par mois",
       proFeatures: [
         "500 recherches",
-        "Tous les modes (LED Caps Lock, Vibration iPhone, Barre des menus, HUD)",
+        "Tous les 5 modes (LED Caps Lock, HUD Flottant, Haptique, Barre des menus, iPhone)",
         "Mode discret & accès illimité",
         "Réponse instantanée en moins d'1 seconde",
         "Licence liée à votre appareil (HWID)"
@@ -371,30 +375,35 @@ function setLanguage(lang) {
     if (textNode) textNode.textContent = t.menu.subscribe;
   }
 
-  // Modes
+  // Modes (5 display modes)
   const mode1Title = document.getElementById('mode1Title');
   if (mode1Title) mode1Title.textContent = t.modes.capsLockTitle;
   const mode1Desc = document.getElementById('mode1Desc');
   if (mode1Desc) mode1Desc.textContent = t.modes.capsLockDesc;
 
   const mode2Title = document.getElementById('mode2Title');
-  if (mode2Title) mode2Title.textContent = t.modes.iphoneTitle;
+  if (mode2Title) mode2Title.textContent = t.modes.hudTitle;
   const mode2Desc = document.getElementById('mode2Desc');
-  if (mode2Desc) mode2Desc.textContent = t.modes.iphoneDesc;
+  if (mode2Desc) mode2Desc.textContent = t.modes.hudDesc;
+
+  const mode3Title = document.getElementById('mode3Title');
+  if (mode3Title) mode3Title.textContent = t.modes.hapticTitle;
+  const mode3Desc = document.getElementById('mode3Desc');
+  if (mode3Desc) mode3Desc.textContent = t.modes.hapticDesc;
+
+  const mode4Title = document.getElementById('mode4Title');
+  if (mode4Title) mode4Title.textContent = t.modes.menuBarTitle;
+  const mode4Desc = document.getElementById('mode4Desc');
+  if (mode4Desc) mode4Desc.textContent = t.modes.menuBarDesc;
+
+  const mode5Title = document.getElementById('mode5Title');
+  if (mode5Title) mode5Title.textContent = t.modes.iphoneTitle;
+  const mode5Desc = document.getElementById('mode5Desc');
+  if (mode5Desc) mode5Desc.textContent = t.modes.iphoneDesc;
   const btnIpaText = document.getElementById('btnIpaText');
   if (btnIpaText && t.modes.ipaBtn) btnIpaText.textContent = t.modes.ipaBtn;
   const btnApkText = document.getElementById('btnApkText');
   if (btnApkText && t.modes.apkBtn) btnApkText.textContent = t.modes.apkBtn;
-
-  const mode3Title = document.getElementById('mode3Title');
-  if (mode3Title) mode3Title.textContent = t.modes.menuBarTitle;
-  const mode3Desc = document.getElementById('mode3Desc');
-  if (mode3Desc) mode3Desc.textContent = t.modes.menuBarDesc;
-
-  const mode4Title = document.getElementById('mode4Title');
-  if (mode4Title) mode4Title.textContent = t.modes.hudTitle;
-  const mode4Desc = document.getElementById('mode4Desc');
-  if (mode4Desc) mode4Desc.textContent = t.modes.hudDesc;
 
   // Pricing
   const pricingTitlePre = document.getElementById('pricingTitlePre');
