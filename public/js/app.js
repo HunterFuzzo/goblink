@@ -2,7 +2,7 @@
 
 const STRIPE_CHECKOUT_URL = "https://buy.stripe.com/aFa14n1dh4dl5L5gXr6Ri00";
 const STRIPE_CHECKOUT_URL_MAX = "https://buy.stripe.com/bJe00j9JNaBJa1lgXr6Ri01";
-const MAC_DOWNLOAD_URL = "https://github.com/HunterFuzzo/BlinkRemote/releases/latest";
+const MAC_DOWNLOAD_URL = "https://github.com/HunterFuzzo/BlinkRemote/releases/download/v1.1.0/Blink.dmg";
 
 const TRANSLATIONS = {
   en: {
