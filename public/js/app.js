@@ -232,6 +232,10 @@ const TRANSLATIONS = {
 };
 
 let currentLang = localStorage.getItem('blink_lang') || 'en';
+let currentAnswerDigit = 1;
+let digitInterval = null;
+
+const APPLE_CURSOR_SVG = `<svg class="apple-cursor" viewBox="0 0 24 24" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 2.5L18.5 14L11.5 15L15.5 22L12 24L8 17L4 21V2.5Z" fill="#000000" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
 
 document.addEventListener('DOMContentLoaded', () => {
   initLanguage();
@@ -239,7 +243,24 @@ document.addEventListener('DOMContentLoaded', () => {
   initFAQ();
   initModals();
   initButtons();
+  initDigitCycle();
 });
+
+function initDigitCycle() {
+  if (digitInterval) clearInterval(digitInterval);
+
+  digitInterval = setInterval(() => {
+    const badge = document.getElementById('digitBadge');
+    if (!badge) return;
+
+    badge.classList.add('animating');
+    setTimeout(() => {
+      currentAnswerDigit = (currentAnswerDigit % 4) + 1;
+      badge.textContent = currentAnswerDigit;
+      badge.classList.remove('animating');
+    }, 180);
+  }, 1600);
+}
 
 function initLanguage() {
   const btnEn = document.getElementById('btnLangEn');
@@ -270,7 +291,7 @@ function setLanguage(lang) {
   // Hero
   const heroTitle = document.getElementById('heroTitle');
   if (heroTitle) {
-    heroTitle.innerHTML = `${t.hero.titlePart1} <svg class="cursor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l7 17 2.5-6.5L19 11 3 3z"/></svg> ${t.hero.titlePart2}<br>${t.hero.titlePart3} <span class="badge-b">Ⓑ</span> ${t.hero.titlePart4}`;
+    heroTitle.innerHTML = `${t.hero.titlePart1} ${APPLE_CURSOR_SVG} ${t.hero.titlePart2}<br>${t.hero.titlePart3} <span class="digit-badge" id="digitBadge">${currentAnswerDigit}</span> ${t.hero.titlePart4}`;
   }
 
   const heroSubtitle = document.getElementById('heroSubtitle');
