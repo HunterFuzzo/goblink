@@ -2,7 +2,9 @@
 
 const STRIPE_CHECKOUT_URL = "https://buy.stripe.com/aFa14n1dh4dl5L5gXr6Ri00";
 const STRIPE_CHECKOUT_URL_MAX = "https://buy.stripe.com/bJe00j9JNaBJa1lgXr6Ri01";
-const MAC_DOWNLOAD_URL = "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink.dmg";
+const MAC_DOWNLOAD_URL = (typeof window !== 'undefined' && window.location.protocol === 'file:')
+  ? "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink.dmg"
+  : "/download";
 
 const TRANSLATIONS = {
   en: {
@@ -604,13 +606,31 @@ function setupLegalModal(triggerId, titleEn, titleFr, contentHtml) {
 }
 
 function initButtons() {
-  // Download buttons
+  // Download buttons (Direct DMG installation - No GitHub redirect)
   const downloadBtns = [document.getElementById('btnDownloadHero'), document.getElementById('btnFreeAction')];
   downloadBtns.forEach(btn => {
     if (btn) {
       btn.addEventListener('click', (e) => {
-        // Direct download of latest Mac build
-        window.open(MAC_DOWNLOAD_URL, '_blank');
+        e.preventDefault();
+        
+        const downloadUrl = (window.location.protocol === 'file:')
+          ? "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink.dmg"
+          : "/download";
+
+        const tempLink = document.createElement('a');
+        tempLink.href = downloadUrl;
+        tempLink.setAttribute('download', 'Blink.dmg');
+        tempLink.style.display = 'none';
+        document.body.appendChild(tempLink);
+        tempLink.click();
+        setTimeout(() => tempLink.remove(), 1000);
+
+        const originalContent = btn.innerHTML;
+        const isFr = (currentLang === 'fr');
+        btn.innerHTML = `<span style="font-weight:700;">${isFr ? 'Téléchargement lancé...' : 'Download started...'}</span>`;
+        setTimeout(() => {
+          btn.innerHTML = originalContent;
+        }, 2500);
       });
     }
   });

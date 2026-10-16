@@ -1,5 +1,22 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/download",
+      "destination": "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink.dmg",
+      "permanent": false
+    },
+    {
+      "source": "/download/mac",
+      "destination": "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink.dmg",
+      "permanent": false
+    },
+    {
+      "source": "/Blink.dmg",
+      "destination": "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink.dmg",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
