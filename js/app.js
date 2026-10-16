@@ -544,50 +544,6 @@ function attachFAQListeners() {
 }
 
 function initModals() {
-  const modal = document.getElementById('loginModal');
-  const btnClose = document.getElementById('modalClose');
-  const menuLogin = document.getElementById('menuLogin');
-  const btnCheckLicense = document.getElementById('btnCheckLicense');
-  const inputLicenseKey = document.getElementById('inputLicenseKey');
-  const licenseFeedback = document.getElementById('licenseFeedback');
-
-  if (menuLogin && modal) {
-    menuLogin.addEventListener('click', () => {
-      modal.classList.add('show');
-      document.getElementById('menuDropdown').classList.remove('show');
-      document.getElementById('btnMenu').classList.remove('active');
-    });
-  }
-
-  if (btnClose && modal) {
-    btnClose.addEventListener('click', () => {
-      modal.classList.remove('show');
-    });
-  }
-
-  if (modal) {
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.classList.remove('show');
-      }
-    });
-  }
-
-  if (btnCheckLicense && inputLicenseKey && licenseFeedback) {
-    btnCheckLicense.addEventListener('click', () => {
-      const key = inputLicenseKey.value.trim().toUpperCase();
-      if (!key) {
-        licenseFeedback.textContent = currentLang === 'fr' ? 'Veuillez saisir une clé valide.' : 'Please enter a valid key.';
-        licenseFeedback.style.color = '#ef4444';
-        return;
-      }
-      licenseFeedback.textContent = currentLang === 'fr' 
-        ? 'Licence vérifiée. Ouvrez Blink sur votre Mac pour synchroniser.' 
-        : 'License verified. Open Blink on your Mac to sync.';
-      licenseFeedback.style.color = '#34c759';
-    });
-  }
-
   // Legal Modals
   setupLegalModal('linkTerms', 'Terms of Service', 'Conditions d\'utilisation', `
     <h3>1. Service Usage</h3>
