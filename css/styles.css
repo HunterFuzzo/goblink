@@ -409,10 +409,11 @@ body {
 }
 
 .btn-download-mac svg {
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 24px;
   fill: currentColor;
   flex-shrink: 0;
+  vertical-align: -2px;
 }
 
 .btn-download-mac:hover {

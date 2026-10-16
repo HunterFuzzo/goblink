@@ -332,7 +332,7 @@ function setLanguage(lang) {
       btnDownloadHero.href = WIN_DOWNLOAD_URL;
       btnDownloadHero.setAttribute('download', 'Blink-Setup.exe');
     } else {
-      const macSvg = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="display:inline-block; vertical-align:-2px; margin-right:8px; flex-shrink:0;"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.61 1.34-.55.63-1.03 1.67-.9 2.69 1 .08 2.02-.45 2.59-1.18z"/></svg>`;
+      const macSvg = `<svg viewBox="0 0 384 512" width="19" height="24" fill="currentColor" style="display:inline-block; vertical-align:-3px; flex-shrink:0;"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>`;
       btnDownloadHero.innerHTML = `${macSvg} ${t.hero.downloadBtnMac}`;
       btnDownloadHero.href = MAC_DOWNLOAD_URL;
       btnDownloadHero.setAttribute('download', 'Blink.dmg');
@@ -491,8 +491,7 @@ function setLanguage(lang) {
       </div>
     `).join('');
 
-    // Reattach listeners to newly rendered items
-    attachFAQListeners();
+    // Event delegation handles dynamic item clicks automatically
   }
 
   // Footer
@@ -538,21 +537,21 @@ function initMenuDropdown() {
 }
 
 function initFAQ() {
-  attachFAQListeners();
-}
+  const faqList = document.getElementById('faqList');
+  if (!faqList) return;
 
-function attachFAQListeners() {
-  const items = document.querySelectorAll('.faq-item');
-  items.forEach(item => {
-    const question = item.querySelector('.faq-question');
+  faqList.addEventListener('click', (e) => {
+    const question = e.target.closest('.faq-question');
     if (!question) return;
-    question.addEventListener('click', () => {
-      const isOpen = item.classList.contains('open');
-      items.forEach(i => i.classList.remove('open'));
-      if (!isOpen) {
-        item.classList.add('open');
-      }
-    });
+
+    const item = question.closest('.faq-item');
+    if (!item) return;
+
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) {
+      item.classList.add('open');
+    }
   });
 }
 
