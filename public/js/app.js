@@ -1,6 +1,7 @@
 // Blink Landing Page Client Engine - Language System & Interactions
 
 const STRIPE_CHECKOUT_URL = "https://buy.stripe.com/aFa14n1dh4dl5L5gXr6Ri00";
+const STRIPE_CHECKOUT_URL_MAX = "https://buy.stripe.com/bJe00j9JNaBJa1lgXr6Ri01";
 const MAC_DOWNLOAD_URL = "https://github.com/HunterFuzzo/BlinkRemote/releases/latest";
 
 const TRANSLATIONS = {
@@ -615,13 +616,11 @@ function initButtons() {
   });
 
   // Subscribe buttons (Stripe checkout)
-  const subscribeBtns = [
+  const proBtns = [
     document.getElementById('menuSubscribe'),
-    document.getElementById('btnProAction'),
-    document.getElementById('btnMaxAction')
+    document.getElementById('btnProAction')
   ];
-
-  subscribeBtns.forEach(btn => {
+  proBtns.forEach(btn => {
     if (btn) {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -629,4 +628,12 @@ function initButtons() {
       });
     }
   });
+
+  const maxBtn = document.getElementById('btnMaxAction');
+  if (maxBtn) {
+    maxBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.open(STRIPE_CHECKOUT_URL_MAX, '_blank');
+    });
+  }
 }
