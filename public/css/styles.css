@@ -224,7 +224,7 @@ body {
 
 /* Main Container */
 .container {
-  max-width: 1120px;
+  max-width: 1160px;
   margin: 0 auto;
   padding: 0 24px;
   position: relative;
@@ -481,20 +481,27 @@ body {
   margin: 0 4px;
 }
 
-/* Interactive Mode Cards Grid */
+/* Interactive Mode Cards Grid: 3 on top, 2 below, centered */
 .modes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  margin-top: 60px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 64px;
   width: 100%;
+  max-width: 1140px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .mode-card {
+  flex: 0 1 calc(33.333% - 16px);
+  min-width: 300px;
+  max-width: 350px;
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: var(--radius-lg);
-  padding: 22px 20px;
+  padding: 24px 22px 28px;
   text-align: left;
   transition: var(--transition);
   display: flex;
@@ -505,22 +512,37 @@ body {
   background: var(--bg-card-hover);
   border-color: var(--border-hover);
   transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
 }
 
-/* Interactive Mode Animated Video Screen */
+@media (max-width: 992px) {
+  .mode-card {
+    flex: 0 1 calc(50% - 14px);
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 660px) {
+  .mode-card {
+    flex: 0 1 100%;
+    max-width: 100%;
+  }
+}
+
+/* Interactive Mode Animated Screen (Enlarged) */
 .mode-preview-box {
   width: 100%;
-  height: 172px;
+  height: 194px;
   background: radial-gradient(ellipse at top, #181822 0%, #09090c 100%);
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.8), 0 4px 18px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 2px 14px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 /* 1. Caps Lock Preview */
@@ -528,34 +550,34 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .preview-keycap {
-  width: 142px;
-  height: 52px;
+  width: 154px;
+  height: 56px;
   background: linear-gradient(180deg, #26262c 0%, #17171a 100%);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-bottom: 3px solid rgba(0, 0, 0, 0.95);
-  border-radius: 9px;
+  border-bottom: 3.5px solid rgba(0, 0, 0, 0.95);
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.22);
+  padding: 0 18px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.22);
 }
 
 .keycap-label {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
   letter-spacing: 0.5px;
 }
 
 .keycap-led {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: #1c2e22;
   border: 1px solid rgba(52, 199, 89, 0.3);
@@ -565,24 +587,24 @@ body {
 
 @keyframes capsLedPulse {
   0%, 15% { background: #1c2e22; box-shadow: none; }
-  18% { background: #34c759; box-shadow: 0 0 12px #34c759, 0 0 22px #34c759; }
+  18% { background: #34c759; box-shadow: 0 0 12px #34c759, 0 0 24px #34c759; }
   28% { background: #1c2e22; box-shadow: none; }
-  35% { background: #34c759; box-shadow: 0 0 12px #34c759, 0 0 22px #34c759; }
+  35% { background: #34c759; box-shadow: 0 0 12px #34c759, 0 0 24px #34c759; }
   45%, 100% { background: #1c2e22; box-shadow: none; }
 }
 
 .preview-status-pill {
-  font-size: 10px;
+  font-size: 11px;
   font-family: ui-monospace, SFMono-Regular, monospace;
   color: #34c759;
   background: rgba(52, 199, 89, 0.08);
   border: 1px solid rgba(52, 199, 89, 0.22);
-  padding: 3px 11px;
+  padding: 4px 13px;
   border-radius: 999px;
   letter-spacing: 0.4px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
 }
 
 .preview-status-pill::before {
@@ -595,44 +617,44 @@ body {
 
 /* 2. Floating HUD Preview */
 .preview-hud-wrap {
-  width: 90%;
+  width: 92%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .mock-hud-card {
   width: 100%;
-  max-width: 210px;
+  max-width: 236px;
   background: rgba(22, 22, 28, 0.85);
   backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 10px;
-  padding: 9px 12px;
+  border-radius: 12px;
+  padding: 11px 14px;
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .mock-hud-q {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.88);
   font-weight: 500;
 }
 
 .mock-hud-options {
   display: flex;
   justify-content: space-between;
-  gap: 6px;
-  font-size: 10px;
+  gap: 7px;
+  font-size: 10.5px;
   color: var(--text-secondary);
 }
 
 .mock-opt {
-  padding: 3px 7px;
-  border-radius: 4px;
+  padding: 4px 8px;
+  border-radius: 5px;
   background: rgba(255, 255, 255, 0.05);
 }
 
@@ -656,16 +678,16 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   position: relative;
 }
 
 .trackpad-mockup {
-  width: 142px;
-  height: 84px;
+  width: 156px;
+  height: 94px;
   background: linear-gradient(180deg, #24242b 0%, #151518 100%);
   border: 1.5px solid rgba(255, 255, 255, 0.16);
-  border-radius: 12px;
+  border-radius: 14px;
   position: relative;
   display: flex;
   align-items: center;
@@ -675,14 +697,14 @@ body {
 }
 
 .trackpad-touch-center {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: rgba(52, 199, 89, 0.25);
   border: 1.5px solid #34c759;
   position: relative;
   z-index: 2;
-  box-shadow: 0 0 10px rgba(52, 199, 89, 0.45);
+  box-shadow: 0 0 12px rgba(52, 199, 89, 0.45);
   animation: trackpadPulse 3s infinite ease-in-out;
 }
 
@@ -699,14 +721,14 @@ body {
 }
 
 .trackpad-ripple.tr-1 {
-  width: 44px;
-  height: 44px;
+  width: 50px;
+  height: 50px;
   animation-delay: 0.5s;
 }
 
 .trackpad-ripple.tr-2 {
-  width: 76px;
-  height: 76px;
+  width: 86px;
+  height: 86px;
   animation-delay: 1.0s;
 }
 
@@ -729,50 +751,50 @@ body {
 
 /* 4. Menu Bar Stealth Preview */
 .preview-menubar-wrap {
-  width: 92%;
+  width: 94%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .mock-menubar {
   width: 100%;
-  height: 30px;
+  height: 34px;
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 8px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 0 12px;
 }
 
 .mock-menu-left {
   display: flex;
   align-items: center;
-  gap: 7px;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 10px;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 11px;
 }
 
 .mock-menu-right {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 10px;
+  gap: 9px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 11px;
 }
 
 .stealth-digit-signal {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 700;
   color: #34c759;
   background: rgba(52, 199, 89, 0.16);
   border: 1px solid rgba(52, 199, 89, 0.4);
-  padding: 1px 6px;
+  padding: 2px 7px;
   border-radius: 5px;
   box-shadow: 0 0 8px rgba(52, 199, 89, 0.35);
   animation: stealthDigitGlow 3s infinite;
@@ -795,16 +817,16 @@ body {
 }
 
 .phone-mockup {
-  width: 64px;
-  height: 98px;
+  width: 70px;
+  height: 108px;
   background: #17171c;
   border: 1.5px solid rgba(255, 255, 255, 0.22);
-  border-radius: 15px;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 6px;
+  padding: 7px;
   position: relative;
   z-index: 2;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
@@ -827,7 +849,7 @@ body {
   width: 100%;
   height: 100%;
   background: #0b0b0e;
-  border-radius: 10px;
+  border-radius: 11px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -836,15 +858,15 @@ body {
 }
 
 .phone-status-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: #34c759;
   box-shadow: 0 0 6px #34c759;
 }
 
 .phone-label {
-  font-size: 8px;
+  font-size: 8.5px;
   font-family: ui-monospace, SFMono-Regular, monospace;
   color: var(--text-secondary);
   font-weight: 500;
@@ -853,20 +875,20 @@ body {
 .haptic-ripple {
   position: absolute;
   border: 1.5px solid rgba(52, 199, 89, 0.45);
-  border-radius: 20px;
+  border-radius: 22px;
   pointer-events: none;
   animation: rippleSpread 3s infinite cubic-bezier(0.1, 0.8, 0.3, 1);
 }
 
 .ripple-1 {
-  width: 76px;
-  height: 110px;
+  width: 84px;
+  height: 122px;
   animation-delay: 0.54s;
 }
 
 .ripple-2 {
-  width: 92px;
-  height: 126px;
+  width: 102px;
+  height: 140px;
   animation-delay: 1.05s;
 }
 
@@ -884,7 +906,7 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-secondary);
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -894,36 +916,36 @@ body {
 }
 
 .mode-card h3 {
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 9px;
   color: #ffffff;
 }
 
 .mode-card p {
-  font-size: 14px;
+  font-size: 14.5px;
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.52;
 }
 
 .mode-app-links {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 14px;
+  gap: 9px;
+  margin-top: 16px;
   flex-wrap: wrap;
 }
 
 .mode-app-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #ffffff;
-  padding: 6px 12px;
+  padding: 7px 14px;
   border-radius: var(--radius-full);
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 500;
   text-decoration: none;
   transition: var(--transition);
