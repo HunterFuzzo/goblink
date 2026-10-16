@@ -32,8 +32,10 @@ const TRANSLATIONS = {
     modes: {
       capsLockTitle: "Caps Lock LED",
       capsLockDesc: "Discreet green pulses flash the correct answer digit silently on your physical keyboard.",
-      iphoneTitle: "iPhone Vibration",
+      iphoneTitle: "iPhone & Android Vibration",
       iphoneDesc: "Tactile motor vibrations in your pocket with zero screen wake via local Wi-Fi pairing.",
+      ipaBtn: "iPhone (.ipa)",
+      apkBtn: "Android (.apk)",
       menuBarTitle: "Menu Bar Stealth",
       menuBarDesc: "Minimalist dot signals in your macOS status bar, hidden from screen recording.",
       hudTitle: "Subtle HUD",
@@ -153,8 +155,10 @@ const TRANSLATIONS = {
     modes: {
       capsLockTitle: "LED Caps Lock",
       capsLockDesc: "Des impulsions lumineuses indiquent silencieusement le numéro de la réponse sur votre clavier physique.",
-      iphoneTitle: "Vibration iPhone",
+      iphoneTitle: "Vibration iPhone & Android",
       iphoneDesc: "Vibrations haptiques discrètes dans votre poche sans allumer l'écran via la synchronisation Wi-Fi locale.",
+      ipaBtn: "iPhone (.ipa)",
+      apkBtn: "Android (.apk)",
       menuBarTitle: "Barre des menus",
       menuBarDesc: "Des points discrets dans la barre des menus macOS, invisibles lors des partages d'écran.",
       hudTitle: "Overlay HUD",
@@ -328,7 +332,8 @@ function setLanguage(lang) {
       btnDownloadHero.href = WIN_DOWNLOAD_URL;
       btnDownloadHero.setAttribute('download', 'Blink-Setup.exe');
     } else {
-      btnDownloadHero.innerHTML = `<svg viewBox="0 0 170 170"><path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.7-7.85-12.01-14.43-5.78-8.81-10.4-19.16-13.85-31.05-3.45-11.89-5.18-22.95-5.18-33.19 0-14.13 3.58-25.79 10.74-34.98 7.16-9.2 16.3-13.87 27.42-14.02 4.9 0 10.23 1.25 15.98 3.75 5.76 2.5 9.57 3.86 11.45 4.08 2.29-.33 6.3-1.84 12.03-4.54 5.73-2.7 10.71-3.9 14.93-3.6 13.04.86 23.3 5.76 30.77 14.7-11.39 6.85-17.02 16.29-16.89 28.32.14 9.68 3.87 17.65 11.2 23.91 7.33 6.26 15.98 9.9 25.95 10.92-2.3 6.84-5.22 14.08-8.77 21.72zM119.22 31.84c0-7.39 2.67-14.24 8.01-20.55 5.34-6.31 11.82-10.27 19.44-11.88.22 1.41.33 2.72.33 3.91 0 7.39-2.78 14.46-8.34 21.2-5.56 6.74-12.33 10.65-20.31 11.74-.22-1.3-.33-2.77-.33-4.42z"/></svg> ${t.hero.downloadBtnMac}`;
+      const macSvg = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="display:inline-block; vertical-align:-2px; margin-right:8px; flex-shrink:0;"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.61 1.34-.55.63-1.03 1.67-.9 2.69 1 .08 2.02-.45 2.59-1.18z"/></svg>`;
+      btnDownloadHero.innerHTML = `${macSvg} ${t.hero.downloadBtnMac}`;
       btnDownloadHero.href = MAC_DOWNLOAD_URL;
       btnDownloadHero.setAttribute('download', 'Blink.dmg');
     }
@@ -376,6 +381,10 @@ function setLanguage(lang) {
   if (mode2Title) mode2Title.textContent = t.modes.iphoneTitle;
   const mode2Desc = document.getElementById('mode2Desc');
   if (mode2Desc) mode2Desc.textContent = t.modes.iphoneDesc;
+  const btnIpaText = document.getElementById('btnIpaText');
+  if (btnIpaText && t.modes.ipaBtn) btnIpaText.textContent = t.modes.ipaBtn;
+  const btnApkText = document.getElementById('btnApkText');
+  if (btnApkText && t.modes.apkBtn) btnApkText.textContent = t.modes.apkBtn;
 
   const mode3Title = document.getElementById('mode3Title');
   if (mode3Title) mode3Title.textContent = t.modes.menuBarTitle;
@@ -643,6 +652,35 @@ function initButtons() {
         setTimeout(() => {
           btn.innerHTML = originalContent;
         }, 2500);
+      });
+    }
+  });
+
+  // Mobile Companion app download buttons (IPA & APK)
+  const companionBtns = [
+    { el: document.getElementById('btnDownloadIpa'), name: 'BlinkRemote.ipa', url: '/downloads/BlinkRemote.ipa' },
+    { el: document.getElementById('btnDownloadApk'), name: 'BlinkRemote.apk', url: '/downloads/BlinkRemote.apk' }
+  ];
+
+  companionBtns.forEach(({ el, name, url }) => {
+    if (el) {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tempLink = document.createElement('a');
+        tempLink.href = url;
+        tempLink.setAttribute('download', name);
+        tempLink.style.display = 'none';
+        document.body.appendChild(tempLink);
+        tempLink.click();
+        setTimeout(() => tempLink.remove(), 1000);
+
+        const originalText = el.querySelector('span') ? el.querySelector('span').textContent : el.textContent;
+        const textSpan = el.querySelector('span');
+        const isFr = (currentLang === 'fr');
+        if (textSpan) textSpan.textContent = isFr ? 'Téléchargé !' : 'Downloaded !';
+        setTimeout(() => {
+          if (textSpan) textSpan.textContent = originalText;
+        }, 2200);
       });
     }
   });

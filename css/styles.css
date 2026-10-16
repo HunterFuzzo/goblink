@@ -409,9 +409,10 @@ body {
 }
 
 .btn-download-mac svg {
-  width: 22px;
-  height: 22px;
-  fill: #000000;
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  flex-shrink: 0;
 }
 
 .btn-download-mac:hover {
@@ -526,6 +527,44 @@ body {
   font-size: 14px;
   color: var(--text-secondary);
   line-height: 1.45;
+}
+
+.mode-app-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.mode-app-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.mode-app-badge:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+  color: #ffffff;
+}
+
+.mode-app-badge svg {
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
+  flex-shrink: 0;
 }
 
 /* Pricing Section (Screenshot 3) */

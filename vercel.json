@@ -30,6 +30,26 @@
       "source": "/Blink-Setup.exe",
       "destination": "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink-Setup.exe",
       "permanent": false
+    },
+    {
+      "source": "/download/ios",
+      "destination": "/downloads/BlinkRemote.ipa",
+      "permanent": false
+    },
+    {
+      "source": "/download/ipa",
+      "destination": "/downloads/BlinkRemote.ipa",
+      "permanent": false
+    },
+    {
+      "source": "/download/android",
+      "destination": "/downloads/BlinkRemote.apk",
+      "permanent": false
+    },
+    {
+      "source": "/download/apk",
+      "destination": "/downloads/BlinkRemote.apk",
+      "permanent": false
     }
   ],
   "rewrites": [
