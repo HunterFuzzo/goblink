@@ -17,7 +17,10 @@ const TRANSLATIONS = {
       titlePart3: "Get the",
       titlePart4: "answer.",
       subtitle: "AI answers for any question on screen.",
-      downloadBtn: "Download for Mac",
+      downloadBtnMac: "Download for Mac",
+      downloadBtnWin: "Download for Windows",
+      altLinkToWin: "On Windows? Download for Windows →",
+      altLinkToMac: "On Mac? Download for Mac →",
       inPersonTitle: "For in-person exams",
       inPersonDesc: "Put your cursor on the question number and press <span class=\"shortcut-badge\">⌃⌥⌘</span> to see the answer."
     },
@@ -83,8 +86,12 @@ const TRANSLATIONS = {
       title: "FAQ",
       items: [
         {
+          q: "Is Blink available for Windows?",
+          a: "Yes! Blink is officially available for Windows 10 & 11 (64-bit). You can download the Windows installer (.exe) directly from the link above. It includes Caps Lock LED, Floating HUD, and iPhone Vibration modes."
+        },
+        {
           q: "I subscribed. How do I start using it?",
-          a: "After completing your subscription on Stripe, simply open Blink on your Mac. Your subscription is automatically detected and bound to your Mac hardware (HWID) within seconds. You can immediately press ⌃⌥⌘ anywhere on your screen to start analyzing questions."
+          a: "After completing your subscription on Stripe, simply open Blink on your Mac or Windows PC. Your subscription is automatically detected and bound to your device hardware (HWID) within seconds. You can immediately press ⌃⌥⌘ (or Alt+Q on Windows) to start analyzing questions."
         },
         {
           q: "How accurate are the answers?",
@@ -92,19 +99,19 @@ const TRANSLATIONS = {
         },
         {
           q: "Does it work with short-answer questions?",
-          a: "Yes. While multiple-choice questions can be conveyed via tactile vibrations or Caps Lock pulses, detailed short answers can be viewed in the discreet HUD mode or directly in your paired Blink iOS companion."
+          a: "Yes. While multiple-choice questions can be conveyed via tactile vibrations or Caps Lock pulses, detailed short answers can be viewed in the discreet HUD mode or directly in your paired Blink companion."
         },
         {
           q: "How do the stealth modes work (LED & iPhone Vibration)?",
-          a: "Blink operates completely behind the scenes. In Caps Lock mode, your green keyboard indicator flashes silently (e.g. 2 pulses for answer B). In iPhone Vibration mode, your phone buzzes subtly in your pocket via local Wi-Fi without turning on its display."
+          a: "Blink operates completely behind the scenes. In Caps Lock mode, your keyboard indicator flashes silently (e.g. 2 pulses for answer B). In iPhone Vibration mode, your phone buzzes subtly in your pocket via local Wi-Fi without turning on its display."
         },
         {
           q: "Can exam proctoring software detect Blink?",
-          a: "Blink is an independent macOS background process. It does not hook into web browsers, does not inject into web pages, does not alter clipboard content, and opens no intrusive windows during hotkey captures."
+          a: "Blink is an independent native background process. It does not hook into web browsers, does not inject into web pages, does not alter clipboard content, and opens no intrusive windows during hotkey captures."
         },
         {
-          q: "Which Mac models and macOS versions are supported?",
-          a: "Blink is optimized for Apple Silicon (M1, M2, M3, M4) and Intel Macs running macOS 12 Monterey, macOS 13 Ventura, macOS 14 Sonoma, or macOS 15 Sequoia."
+          q: "Which operating systems and hardware are supported?",
+          a: "Blink supports Windows 10 & 11 (64-bit), as well as macOS (Apple Silicon M1, M2, M3, M4 and Intel Macs running macOS 12 Monterey up to macOS 15 Sequoia)."
         }
       ]
     },
@@ -130,7 +137,10 @@ const TRANSLATIONS = {
       titlePart3: "Obtenez la réponse",
       titlePart4: ".",
       subtitle: "L'intelligence artificielle répond à chaque question sur votre écran.",
-      downloadBtn: "Télécharger pour Mac",
+      downloadBtnMac: "Télécharger pour Mac",
+      downloadBtnWin: "Télécharger pour Windows",
+      altLinkToWin: "Sur Windows ? Télécharger pour Windows →",
+      altLinkToMac: "Sur Mac ? Télécharger pour Mac →",
       inPersonTitle: "Pour les examens en présentiel",
       inPersonDesc: "Placez votre curseur sur le numéro de la question et appuyez sur <span class=\"shortcut-badge\">⌃⌥⌘</span> pour voir la réponse."
     },
@@ -140,7 +150,7 @@ const TRANSLATIONS = {
     },
     modes: {
       capsLockTitle: "LED Caps Lock",
-      capsLockDesc: "Des impulsions lumineuses vertes indiquent silencieusement le numéro de la réponse sur votre clavier physique.",
+      capsLockDesc: "Des impulsions lumineuses indiquent silencieusement le numéro de la réponse sur votre clavier physique.",
       iphoneTitle: "Vibration iPhone",
       iphoneDesc: "Vibrations haptiques discrètes dans votre poche sans allumer l'écran via la synchronisation Wi-Fi locale.",
       menuBarTitle: "Barre des menus",
@@ -175,7 +185,7 @@ const TRANSLATIONS = {
         "Tous les modes (LED Caps Lock, Vibration iPhone, Barre des menus, HUD)",
         "Mode discret & accès illimité",
         "Réponse instantanée en moins d'1 seconde",
-        "Licence liée à votre Mac (HWID)"
+        "Licence liée à votre appareil (HWID)"
       ],
       proBtn: "S'abonner",
       
@@ -196,8 +206,12 @@ const TRANSLATIONS = {
       title: "FAQ",
       items: [
         {
+          q: "Blink est-il disponible sur Windows ?",
+          a: "Oui ! Blink est désormais officiellement disponible pour Windows 10 et 11 (64 bits). Vous pouvez télécharger l'installateur Windows (.exe) directement via le lien en haut de page. Il intègre le mode Caps Lock LED, l'overlay HUD et la vibration iPhone."
+        },
+        {
           q: "Je me suis abonné. Comment commencer à l'utiliser ?",
-          a: "Dès votre paiement validé sur Stripe, ouvrez simplement Blink sur votre Mac. Votre abonnement est instantanément détecté et rattaché à votre Mac (HWID). Vous pouvez immédiatement appuyer sur ⌃⌥⌘ n'importe où sur votre écran pour analyser vos questions."
+          a: "Dès votre paiement validé sur Stripe, ouvrez simplement Blink sur votre Mac ou PC Windows. Votre abonnement est instantanément détecté et rattaché à votre appareil (HWID). Vous pouvez immédiatement appuyer sur ⌃⌥⌘ (ou Alt+Q sur Windows) pour analyser vos questions."
         },
         {
           q: "Quelle est la précision des réponses ?",
@@ -205,19 +219,19 @@ const TRANSLATIONS = {
         },
         {
           q: "Est-ce que ça fonctionne avec les questions ouvertes ?",
-          a: "Oui. Bien que les QCM soient retransmis par vibrations haptiques ou impulsions LED, les réponses détaillées peuvent être consultées via l'overlay HUD ultra-discret ou sur votre iPhone compagnon."
+          a: "Oui. Bien que les QCM soient retransmis par vibrations haptiques ou impulsions LED, les réponses détaillées peuvent être consultées via l'overlay HUD ultra-discret ou sur votre téléphone compagnon."
         },
         {
           q: "Comment fonctionnent les modes discrets (LED & Vibration iPhone) ?",
-          a: "Blink reste invisible. En mode Caps Lock, le voyant vert de votre clavier clignote silencieusement (ex: 2 flashs = réponse B). En mode iPhone, le téléphone vibre dans votre poche via le Wi-Fi local sans allumer l'écran."
+          a: "Blink reste invisible. En mode Caps Lock, le voyant de votre clavier clignote silencieusement (ex: 2 flashs = réponse B). En mode iPhone, le téléphone vibre dans votre poche via le Wi-Fi local sans allumer l'écran."
         },
         {
           q: "Les logiciels de surveillance d'examen peuvent-ils détecter Blink ?",
-          a: "Blink tourne en tâche de fond indépendante sur macOS. Il n'interfère pas avec les navigateurs web, n'altère pas le code des pages, ne modifie pas le presse-papiers et n'ouvre aucune fenêtre intrusive."
+          a: "Blink tourne en tâche de fond native indépendante. Il n'interfère pas avec les navigateurs web, n'altère pas le code des pages, ne modifie pas le presse-papiers et n'ouvre aucune fenêtre intrusive."
         },
         {
-          q: "Quels modèles de Mac et versions de macOS sont compatibles ?",
-          a: "Blink est optimisé pour les processeurs Apple Silicon (M1, M2, M3, M4) ainsi que les Mac Intel, sous macOS 12 Monterey, macOS 13 Ventura, macOS 14 Sonoma et macOS 15 Sequoia."
+          q: "Quels systèmes d'exploitation sont compatibles ?",
+          a: "Blink est optimisé pour Windows 10 et 11 (64 bits), ainsi que macOS (puces Apple Silicon M1, M2, M3, M4 et processeurs Intel sous macOS 12 Monterey jusqu'à macOS 15 Sequoia)."
         }
       ]
     },
@@ -303,9 +317,32 @@ function setLanguage(lang) {
   const heroSubtitle = document.getElementById('heroSubtitle');
   if (heroSubtitle) heroSubtitle.textContent = t.hero.subtitle;
 
+  const isWindows = typeof navigator !== 'undefined' && /Win/i.test(navigator.userAgent || navigator.platform);
   const btnDownloadHero = document.getElementById('btnDownloadHero');
   if (btnDownloadHero) {
-    btnDownloadHero.innerHTML = `<svg viewBox="0 0 170 170"><path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.7-7.85-12.01-14.43-5.78-8.81-10.4-19.16-13.85-31.05-3.45-11.89-5.18-22.95-5.18-33.19 0-14.13 3.58-25.79 10.74-34.98 7.16-9.2 16.3-13.87 27.42-14.02 4.9 0 10.23 1.25 15.98 3.75 5.76 2.5 9.57 3.86 11.45 4.08 2.29-.33 6.3-1.84 12.03-4.54 5.73-2.7 10.71-3.9 14.93-3.6 13.04.86 23.3 5.76 30.77 14.7-11.39 6.85-17.02 16.29-16.89 28.32.14 9.68 3.87 17.65 11.2 23.91 7.33 6.26 15.98 9.9 25.95 10.92-2.3 6.84-5.22 14.08-8.77 21.72zM119.22 31.84c0-7.39 2.67-14.24 8.01-20.55 5.34-6.31 11.82-10.27 19.44-11.88.22 1.41.33 2.72.33 3.91 0 7.39-2.78 14.46-8.34 21.2-5.56 6.74-12.33 10.65-20.31 11.74-.22-1.3-.33-2.77-.33-4.42z"/></svg> ${t.hero.downloadBtn}`;
+    if (isWindows) {
+      const winSvg = `<svg viewBox="0 0 88 88" width="18" height="18" fill="currentColor" style="display:inline-block; vertical-align:-3px; margin-right:8px;"><path d="M0 12.402l35.687-4.86.016 34.423-35.67.203zm35.67 33.529l.028 34.453L.028 75.48.016 46.134zM39.75 6.945L87.31 0v41.332l-47.56.32zM87.31 46.108v41.378L39.75 80.53V46.332z"/></svg>`;
+      btnDownloadHero.innerHTML = `${winSvg} ${t.hero.downloadBtnWin}`;
+      btnDownloadHero.href = WIN_DOWNLOAD_URL;
+      btnDownloadHero.setAttribute('download', 'Blink-Setup.exe');
+    } else {
+      btnDownloadHero.innerHTML = `<svg viewBox="0 0 170 170"><path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.7-7.85-12.01-14.43-5.78-8.81-10.4-19.16-13.85-31.05-3.45-11.89-5.18-22.95-5.18-33.19 0-14.13 3.58-25.79 10.74-34.98 7.16-9.2 16.3-13.87 27.42-14.02 4.9 0 10.23 1.25 15.98 3.75 5.76 2.5 9.57 3.86 11.45 4.08 2.29-.33 6.3-1.84 12.03-4.54 5.73-2.7 10.71-3.9 14.93-3.6 13.04.86 23.3 5.76 30.77 14.7-11.39 6.85-17.02 16.29-16.89 28.32.14 9.68 3.87 17.65 11.2 23.91 7.33 6.26 15.98 9.9 25.95 10.92-2.3 6.84-5.22 14.08-8.77 21.72zM119.22 31.84c0-7.39 2.67-14.24 8.01-20.55 5.34-6.31 11.82-10.27 19.44-11.88.22 1.41.33 2.72.33 3.91 0 7.39-2.78 14.46-8.34 21.2-5.56 6.74-12.33 10.65-20.31 11.74-.22-1.3-.33-2.77-.33-4.42z"/></svg> ${t.hero.downloadBtnMac}`;
+      btnDownloadHero.href = MAC_DOWNLOAD_URL;
+      btnDownloadHero.setAttribute('download', 'Blink.dmg');
+    }
+  }
+
+  const heroAltLink = document.getElementById('heroAltLink');
+  if (heroAltLink) {
+    if (isWindows) {
+      heroAltLink.textContent = t.hero.altLinkToMac;
+      heroAltLink.href = MAC_DOWNLOAD_URL;
+      heroAltLink.setAttribute('download', 'Blink.dmg');
+    } else {
+      heroAltLink.textContent = t.hero.altLinkToWin;
+      heroAltLink.href = WIN_DOWNLOAD_URL;
+      heroAltLink.setAttribute('download', 'Blink-Setup.exe');
+    }
   }
 
   const examTitle = document.getElementById('examTitle');
@@ -669,6 +706,32 @@ function initButtons() {
     maxBtn.addEventListener('click', (e) => {
       e.preventDefault();
       window.open(STRIPE_CHECKOUT_URL_MAX, '_blank');
+    });
+  }
+
+  // Hero Alternate Link direct download handler
+  const heroAltLink = document.getElementById('heroAltLink');
+  if (heroAltLink) {
+    heroAltLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isWin = typeof navigator !== 'undefined' && /Win/i.test(navigator.userAgent || navigator.platform);
+      const altFileName = isWin ? 'Blink.dmg' : 'Blink-Setup.exe';
+      const altDownloadUrl = isWin ? MAC_DOWNLOAD_URL : WIN_DOWNLOAD_URL;
+
+      const tempLink = document.createElement('a');
+      tempLink.href = altDownloadUrl;
+      tempLink.setAttribute('download', altFileName);
+      tempLink.style.display = 'none';
+      document.body.appendChild(tempLink);
+      tempLink.click();
+      setTimeout(() => tempLink.remove(), 1000);
+
+      const origText = heroAltLink.textContent;
+      const isFr = (currentLang === 'fr');
+      heroAltLink.textContent = isFr ? 'Téléchargement lancé...' : 'Download started...';
+      setTimeout(() => {
+        heroAltLink.textContent = origText;
+      }, 2500);
     });
   }
 }
