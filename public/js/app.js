@@ -22,7 +22,8 @@ const TRANSLATIONS = {
       altLinkToWin: "On Windows? Download for Windows →",
       altLinkToMac: "On Mac? Download for Mac →",
       inPersonTitle: "For in-person exams",
-      inPersonDesc: "Put your cursor on the question number and press <span class=\"shortcut-badge\">⌃⌥⌘</span> to see the answer."
+      inPersonDescMac: "Put your cursor on the question number and press <span class=\"shortcut-badge\">⌃⌥⌘</span> to see the answer.",
+      inPersonDescWin: "Put your cursor on the question number and press <span class=\"shortcut-badge\">Ctrl + Alt + Space</span> to see the answer."
     },
     menu: {
       login: "Log in",
@@ -48,7 +49,7 @@ const TRANSLATIONS = {
       freeLimit: "3 question analysis credits",
       freeFeatures: [
         "3 question analysis credits",
-        "Caps Lock LED & iPhone Vibration",
+        "All indication modes (Caps Lock LED, Floating HUD, iPhone Vibration)",
         "High-precision OCR & Instant AI",
         "No credit card required"
       ],
@@ -142,7 +143,8 @@ const TRANSLATIONS = {
       altLinkToWin: "Sur Windows ? Télécharger pour Windows →",
       altLinkToMac: "Sur Mac ? Télécharger pour Mac →",
       inPersonTitle: "Pour les examens en présentiel",
-      inPersonDesc: "Placez votre curseur sur le numéro de la question et appuyez sur <span class=\"shortcut-badge\">⌃⌥⌘</span> pour voir la réponse."
+      inPersonDescMac: "Placez votre curseur sur le numéro de la question et appuyez sur <span class=\"shortcut-badge\">⌃⌥⌘</span> pour voir la réponse.",
+      inPersonDescWin: "Placez votre curseur sur le numéro de la question et appuyez sur <span class=\"shortcut-badge\">Ctrl + Alt + Espace</span> pour voir la réponse."
     },
     menu: {
       login: "Connexion",
@@ -168,7 +170,7 @@ const TRANSLATIONS = {
       freeLimit: "3 crédits d'analyse offerts",
       freeFeatures: [
         "3 crédits d'analyse de questions",
-        "LED Caps Lock & Vibration iPhone",
+        "Tous les modes inclus (LED Caps Lock, Overlay HUD, Vibration iPhone)",
         "OCR haute précision & IA instantanée",
         "Aucune carte bancaire requise"
       ],
@@ -349,7 +351,7 @@ function setLanguage(lang) {
   if (examTitle) examTitle.textContent = t.hero.inPersonTitle;
 
   const examDesc = document.getElementById('examDesc');
-  if (examDesc) examDesc.innerHTML = t.hero.inPersonDesc;
+  if (examDesc) examDesc.innerHTML = isWindows ? t.hero.inPersonDescWin : t.hero.inPersonDescMac;
 
   // Dropdown Menu
   const menuLogin = document.getElementById('menuLogin');
@@ -464,13 +466,15 @@ function setLanguage(lang) {
   const faqTitle = document.getElementById('faqTitle');
   if (faqTitle) faqTitle.textContent = t.faq.title;
 
+  const CHEVRON_DOWN_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+
   const faqContainer = document.getElementById('faqList');
   if (faqContainer) {
     faqContainer.innerHTML = t.faq.items.map((item, idx) => `
       <div class="faq-item" data-index="${idx}">
         <div class="faq-question">
           <span>${item.q}</span>
-          <span class="faq-toggle-icon">+</span>
+          <span class="faq-toggle-icon">${CHEVRON_DOWN_SVG}</span>
         </div>
         <div class="faq-answer">
           <p>${item.a}</p>

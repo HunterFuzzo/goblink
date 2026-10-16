@@ -179,7 +179,7 @@
             </li>
             <li>
               <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>Caps Lock LED & iPhone Vibration</span>
+              <span>All indication modes (Caps Lock LED, Floating HUD, iPhone Vibration)</span>
             </li>
             <li>
               <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -269,7 +269,83 @@
     <section class="faq-section" id="faq">
       <h2 class="faq-title" id="faqTitle">FAQ</h2>
       <div class="faq-list" id="faqList">
-        <!-- Accordion items rendered dynamically by app.js -->
+        <div class="faq-item" data-index="0">
+          <div class="faq-question">
+            <span>Is Blink available for Windows?</span>
+            <span class="faq-toggle-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+          </div>
+          <div class="faq-answer">
+            <p>Yes! Blink is officially available for Windows 10 & 11 (64-bit). You can download the Windows installer (.exe) directly from the link above. It includes Caps Lock LED, Floating HUD, and iPhone Vibration modes.</p>
+          </div>
+        </div>
+        <div class="faq-item" data-index="1">
+          <div class="faq-question">
+            <span>I subscribed. How do I start using it?</span>
+            <span class="faq-toggle-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+          </div>
+          <div class="faq-answer">
+            <p>After completing your subscription on Stripe, simply open Blink on your Mac or Windows PC. Your subscription is automatically detected and bound to your device hardware (HWID) within seconds. You can immediately press ⌃⌥⌘ (or Ctrl + Alt + Space on Windows) to start analyzing questions.</p>
+          </div>
+        </div>
+        <div class="faq-item" data-index="2">
+          <div class="faq-question">
+            <span>How accurate are the answers?</span>
+            <span class="faq-toggle-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+          </div>
+          <div class="faq-answer">
+            <p>Blink uses state-of-the-art vision reasoning models with dedicated academic benchmarks, delivering over 98% accuracy on multiple-choice, STEM, law, and medical quizzes in less than a second.</p>
+          </div>
+        </div>
+        <div class="faq-item" data-index="3">
+          <div class="faq-question">
+            <span>Does it work with short-answer questions?</span>
+            <span class="faq-toggle-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+          </div>
+          <div class="faq-answer">
+            <p>Yes. While multiple-choice questions can be conveyed via tactile vibrations or Caps Lock pulses, detailed short answers can be viewed in the discreet HUD mode or directly in your paired Blink companion.</p>
+          </div>
+        </div>
+        <div class="faq-item" data-index="4">
+          <div class="faq-question">
+            <span>How do the stealth modes work (LED & iPhone Vibration)?</span>
+            <span class="faq-toggle-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+          </div>
+          <div class="faq-answer">
+            <p>Blink operates completely behind the scenes. In Caps Lock mode, your keyboard indicator flashes silently (e.g. 2 pulses for answer B). In iPhone Vibration mode, your phone buzzes subtly in your pocket via local Wi-Fi without turning on its display.</p>
+          </div>
+        </div>
+        <div class="faq-item" data-index="5">
+          <div class="faq-question">
+            <span>Can exam proctoring software detect Blink?</span>
+            <span class="faq-toggle-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+          </div>
+          <div class="faq-answer">
+            <p>Blink is an independent native background process. It does not hook into web browsers, does not inject into web pages, does not alter clipboard content, and opens no intrusive windows during hotkey captures.</p>
+          </div>
+        </div>
+        <div class="faq-item" data-index="6">
+          <div class="faq-question">
+            <span>Which operating systems and hardware are supported?</span>
+            <span class="faq-toggle-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+          </div>
+          <div class="faq-answer">
+            <p>Blink supports Windows 10 & 11 (64-bit), as well as macOS (Apple Silicon M1, M2, M3, M4 and Intel Macs running macOS 12 Monterey up to macOS 15 Sequoia).</p>
+          </div>
+        </div>
       </div>
     </section>
 
