@@ -120,22 +120,22 @@ const TRANSLATIONS = {
         },
         {
           q: "How does the referral program work?",
-          a: "When you join using a friend's referral link or unique code (e.g. <code>BLINK-87847</code>), you instantly get <strong>30% OFF</strong> both Pro and Max plans. The Pro plan drops to <strong>2.09 € / month</strong> (around 2 €/mo instead of 2.99 €) and Max drops to <strong>3.49 € / month</strong>. The discount is automatically reflected at checkout."
+          a: "By sharing your personal invitation link or code (e.g. <code>BLINK-87847</code>) with a friend, as soon as they subscribe to Blink, <strong>YOU</strong> automatically receive a <strong>30% discount</strong> on your own Pro (~2 €/mo instead of 2.99 €) or Max (~3.49 €/mo instead of 4.99 €) subscription!"
         }
       ]
     },
     referral: {
       topTag: "REFERRAL",
-      topText: "Referral Program: Invited by a friend? Use your referral code or link to unlock 30% OFF on Pro (~2 €/mo) & Max!",
-      topLink: "Claim 30% OFF →",
-      title: "Referral Code",
-      discountPill: "30% OFF APPLIED",
-      desc: "Invited by a friend using Blink? Enter their referral code to unlock <strong>30% OFF immediately</strong>: Pro at <strong>2.09 € / month</strong> (instead of 2.99 €) and Max at <strong>3.49 € / month</strong>.",
+      topText: "Referral Program: Refer a friend! As soon as they subscribe, YOU get 30% OFF your own Pro (~2 €/mo) & Max subscription.",
+      topLink: "Learn more →",
+      title: "Referrer Code",
+      discountPill: "CREDIT A FRIEND",
+      desc: "Did a friend introduce you to Blink? Enter their referral code below so they receive <strong>30% OFF</strong> their own subscription!",
       inputPlaceholder: "e.g. BLINK-87847 or friend ID",
-      applyBtn: "Verify code",
+      applyBtn: "Save referrer",
       removeBtn: "Remove",
-      successMsg: "✓ Referral code {CODE} verified: 30% OFF applied on Pro (2.09 €/mo) and Max (3.49 €/mo)!",
-      errorMsg: "Unrecognized referral code. You must enter a valid friend referral code provided by a Blink user (e.g. BLINK-12345)."
+      successMsg: "✓ Referrer {CODE} verified! Your friend will receive 30% OFF their Blink subscription upon checkout.",
+      errorMsg: "Unrecognized referral code. Ask your friend for their Blink referral code (e.g. BLINK-12345)."
     },
     footer: {
       terms: "Terms of Service",
@@ -262,22 +262,22 @@ const TRANSLATIONS = {
         },
         {
           q: "Comment fonctionne le système de parrainage ?",
-          a: "En utilisant le lien d'invitation ou le code unique d'un ami (ex: <code>BLINK-87847</code>), vous bénéficiez immédiatement de <strong>-30% de réduction</strong> sur Pro et Max. Le plan Pro passe ainsi à <strong>2,09 € / mois</strong> (~2 €/mois au lieu de 2,99 €) et Max à <strong>3,49 € / mois</strong>. La réduction est appliquée automatiquement lors du paiement sécurisé Stripe."
+          a: "En partageant votre lien ou code unique d'invitation (ex: <code>BLINK-87847</code>) à un ami, dès qu'il prend un abonnement Blink, <strong>VOUS</strong> bénéficiez automatiquement d'une réduction de <strong>-30%</strong> sur votre propre abonnement Pro (~2 €/mois au lieu de 2,99 €) ou Max (~3,49 €/mois au lieu de 4,99 €) !"
         }
       ]
     },
     referral: {
       topTag: "PARRAINAGE",
-      topText: "Programme Parrainage : Invité par un ami ? Utilisez votre code ou lien pour débloquer -30% immédiat sur Pro (~2 €/mois) & Max !",
-      topLink: "Activer mon offre →",
-      title: "Code de parrainage",
-      discountPill: "-30% IMMÉDIAT",
-      desc: "Vous avez été invité par un ami utilisateur de Blink ? Entrez son code parrain pour débloquer <strong>-30% immédiat</strong> : Pro à <strong>2,09 €/mois</strong> (au lieu de 2,99 €) et Max à <strong>3,49 €/mois</strong>.",
-      inputPlaceholder: "Ex: BLINK-87847 ou ID parrain",
-      applyBtn: "Valider le code",
+      topText: "Programme Parrainage : Invitez un ami ! Dès qu'il prend un abonnement, VOUS bénéficiez de -30% sur votre propre abonnement Pro (~2 €/mois) & Max.",
+      topLink: "En savoir plus →",
+      title: "Code de votre parrain",
+      discountPill: "SOUTENIR UN AMI",
+      desc: "Un ami utilisateur de Blink vous a partagé son lien ? Entrez son code ci-dessous pour lui faire créditer sa récompense de <strong>-30%</strong> sur son propre abonnement !",
+      inputPlaceholder: "Ex: BLINK-87847 ou ID de votre ami",
+      applyBtn: "Enregistrer le parrain",
       removeBtn: "Retirer",
-      successMsg: "✓ Code parrain {CODE} validé : -30% immédiat sur Pro (2,09 €/mois) et Max (3,49 €/mois) !",
-      errorMsg: "Code de parrainage non reconnu. Vous devez entrer un code parrain valide fourni par un utilisateur Blink (ex: BLINK-12345)."
+      successMsg: "✓ Parrain {CODE} enregistré ! Votre ami recevra automatiquement ses -30% sur son abonnement Blink.",
+      errorMsg: "Code de parrainage non reconnu. Demandez à votre ami son code Blink (ex: BLINK-12345)."
     },
     footer: {
       terms: "Conditions d'utilisation",
@@ -303,9 +303,8 @@ let activeReferralCode = null;
 
 function getStripeCheckoutUrl(baseLink) {
   if (activeReferralCode) {
-    const knownCodes = ['PARRAIN30', 'BLINK30', 'INVITE30', 'PARRAIN', 'PARRAINAGE', 'AMIS30', 'REF30'];
-    const stripeCode = knownCodes.includes(activeReferralCode.toUpperCase()) ? activeReferralCode.toUpperCase() : 'PARRAIN30';
-    return `${baseLink}?prefilled_promo_code=${encodeURIComponent(stripeCode)}`;
+    const cleanReferrer = activeReferralCode.replace(/^BLINK-/i, '').replace(/^#/i, '').trim();
+    return `${baseLink}?client_reference_id=REF_${encodeURIComponent(cleanReferrer)}`;
   }
   return baseLink;
 }
@@ -510,12 +509,7 @@ function setLanguage(lang) {
   if (planProDesc) planProDesc.textContent = t.pricing.proDesc;
   const planProPrice = document.getElementById('planProPrice');
   if (planProPrice) {
-    if (activeReferralCode) {
-      const discountedPro = (currentLang === 'fr') ? '2,09 €' : '2.09 €';
-      planProPrice.innerHTML = `<span class="price-old-struck">${t.pricing.proPrice}</span> ${discountedPro} <span>${t.pricing.proPeriod}</span> <span class="price-discount-tag">-30%</span>`;
-    } else {
-      planProPrice.innerHTML = `${t.pricing.proPrice} <span>${t.pricing.proPeriod}</span>`;
-    }
+    planProPrice.innerHTML = `${t.pricing.proPrice} <span>${t.pricing.proPeriod}</span>`;
   }
   const planProLimit = document.getElementById('planProLimit');
   if (planProLimit) planProLimit.textContent = t.pricing.proLimit;
@@ -539,12 +533,7 @@ function setLanguage(lang) {
   if (planMaxDesc) planMaxDesc.textContent = t.pricing.maxDesc;
   const planMaxPrice = document.getElementById('planMaxPrice');
   if (planMaxPrice) {
-    if (activeReferralCode) {
-      const discountedMax = (currentLang === 'fr') ? '3,49 €' : '3.49 €';
-      planMaxPrice.innerHTML = `<span class="price-old-struck">${t.pricing.maxPrice}</span> ${discountedMax} <span>${t.pricing.maxPeriod}</span> <span class="price-discount-tag">-30%</span>`;
-    } else {
-      planMaxPrice.innerHTML = `${t.pricing.maxPrice} <span>${t.pricing.maxPeriod}</span>`;
-    }
+    planMaxPrice.innerHTML = `${t.pricing.maxPrice} <span>${t.pricing.maxPeriod}</span>`;
   }
   const planMaxLimit = document.getElementById('planMaxLimit');
   if (planMaxLimit) planMaxLimit.textContent = t.pricing.maxLimit;
@@ -871,8 +860,8 @@ function initReferralSystem() {
     if (feedback) {
       feedback.className = 'referral-feedback-msg success';
       feedback.textContent = (currentLang === 'fr')
-        ? `✓ Code ami ${clean} validé ! -30% appliqué : Pro à ~2 €/mois (2,09 €) et Max à 3,49 €/mois.`
-        : `✓ Friend referral ${clean} verified! 30% OFF applied: Pro at ~2 €/mo (2.09 €) and Max at 3.49 €/mo.`;
+        ? `✓ Parrain ${clean} enregistré ! Votre ami recevra ses -30% sur son propre abonnement grâce à votre commande.`
+        : `✓ Referrer ${clean} saved! Your friend will receive 30% OFF their own subscription thanks to your order.`;
       feedback.style.display = 'flex';
     }
 
