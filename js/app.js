@@ -1,7 +1,18 @@
 // Blink Landing Page Client Engine - Language System & Interactions
 
-const STRIPE_CHECKOUT_URL = "https://buy.stripe.com/aFa14n1dh4dl5L5gXr6Ri00";
-const STRIPE_CHECKOUT_URL_MAX = "https://buy.stripe.com/bJe00j9JNaBJa1lgXr6Ri01";
+const STRIPE_LINKS = {
+  pro: {
+    yearly: "https://buy.stripe.com/aFa14n1dh4dl5L5gXr6Ri00",
+    monthly: "https://buy.stripe.com/eVq14n4ptfW3flFfTn6Ri02"
+  },
+  max: {
+    yearly: "https://buy.stripe.com/bJe00j9JNaBJa1lgXr6Ri01",
+    monthly: "https://buy.stripe.com/bJe14n2hl8tBb5p6iN6Ri03"
+  }
+};
+
+let currentBillingPeriod = 'yearly'; // 'yearly' (default) or 'monthly'
+
 const MAC_DOWNLOAD_URL = (typeof window !== 'undefined' && window.location.protocol === 'file:')
   ? "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink.dmg"
   : "/download/mac";
@@ -62,8 +73,11 @@ const TRANSLATIONS = {
       proPlan: "Pro",
       popularBadge: "POPULAR",
       proDesc: "Perfect for students who need quick answers.",
-      proPrice: "2.99 €",
+      proPriceYearly: "2.99 €",
+      proPriceMonthly: "3.89 €",
       proPeriod: "/ month",
+      proNoteYearly: "Billed €35.88 per year",
+      proNoteMonthly: "No commitment · (+30% vs yearly)",
       proLimit: "500 research per month",
       proFeatures: [
         "500 research",
@@ -76,8 +90,11 @@ const TRANSLATIONS = {
       
       maxPlan: "Max",
       maxDesc: "Great value for heavy users who search every day.",
-      maxPrice: "4.99 €",
+      maxPriceYearly: "4.99 €",
+      maxPriceMonthly: "6.49 €",
       maxPeriod: "/ month",
+      maxNoteYearly: "Billed €59.88 per year",
+      maxNoteMonthly: "No commitment · (+30% vs yearly)",
       maxLimit: "1,500 research per month",
       maxFeatures: [
         "Everything in Pro included",
@@ -119,23 +136,10 @@ const TRANSLATIONS = {
           a: "Blink supports Windows 10 & 11 (64-bit), as well as macOS (Apple Silicon M1, M2, M3, M4 and Intel Macs running macOS 12 Monterey up to macOS 15 Sequoia)."
         },
         {
-          q: "How does the referral program work?",
-          a: "By sharing your personal invitation link or code (e.g. <code>BLINK-87847</code>) with a friend, as soon as they subscribe to Blink, <strong>YOU</strong> automatically receive a <strong>30% discount</strong> on your own Pro (~2 €/mo instead of 2.99 €) or Max (~3.49 €/mo instead of 4.99 €) subscription!"
+          q: "Can I cancel or switch billing intervals anytime?",
+          a: "Yes! You can manage or cancel your subscription at any time directly through the Stripe customer portal with 1 click. Yearly billing gives you the best price, while Monthly offers maximum flexibility."
         }
       ]
-    },
-    referral: {
-      topTag: "REFERRAL",
-      topText: "Referral Program: Refer a friend! As soon as they subscribe, YOU get 30% OFF your own Pro (~2 €/mo) & Max subscription.",
-      topLink: "Learn more →",
-      title: "Referrer Code",
-      discountPill: "CREDIT A FRIEND",
-      desc: "Did a friend introduce you to Blink? Enter their referral code below so they receive <strong>30% OFF</strong> their own subscription!",
-      inputPlaceholder: "e.g. BLINK-87847 or friend ID",
-      applyBtn: "Save referrer",
-      removeBtn: "Remove",
-      successMsg: "✓ Referrer {CODE} verified! Your friend will receive 30% OFF their Blink subscription upon checkout.",
-      errorMsg: "Unrecognized referral code. Ask your friend for their Blink referral code (e.g. BLINK-12345)."
     },
     footer: {
       terms: "Terms of Service",
@@ -204,8 +208,11 @@ const TRANSLATIONS = {
       proPlan: "Pro",
       popularBadge: "POPULAIRE",
       proDesc: "Idéal pour les étudiants qui ont besoin de réponses rapides.",
-      proPrice: "2,99 €",
+      proPriceYearly: "2,99 €",
+      proPriceMonthly: "3,89 €",
       proPeriod: "/ mois",
+      proNoteYearly: "Facturé 35,88 € par an",
+      proNoteMonthly: "Sans engagement · (+30% vs annuel)",
       proLimit: "500 recherches par mois",
       proFeatures: [
         "500 recherches",
@@ -218,8 +225,11 @@ const TRANSLATIONS = {
       
       maxPlan: "Max",
       maxDesc: "Idéal pour les utilisateurs intensifs au quotidien.",
-      maxPrice: "4,99 €",
+      maxPriceYearly: "4,99 €",
+      maxPriceMonthly: "6,49 €",
       maxPeriod: "/ mois",
+      maxNoteYearly: "Facturé 59,88 € par an",
+      maxNoteMonthly: "Sans engagement · (+30% vs annuel)",
       maxLimit: "1 500 recherches par mois",
       maxFeatures: [
         "Tout ce qui est inclus dans Pro",
@@ -261,23 +271,10 @@ const TRANSLATIONS = {
           a: "Blink est optimisé pour Windows 10 et 11 (64 bits), ainsi que macOS (puces Apple Silicon M1, M2, M3, M4 et processeurs Intel sous macOS 12 Monterey jusqu'à macOS 15 Sequoia)."
         },
         {
-          q: "Comment fonctionne le système de parrainage ?",
-          a: "En partageant votre lien ou code unique d'invitation (ex: <code>BLINK-87847</code>) à un ami, dès qu'il prend un abonnement Blink, <strong>VOUS</strong> bénéficiez automatiquement d'une réduction de <strong>-30%</strong> sur votre propre abonnement Pro (~2 €/mois au lieu de 2,99 €) ou Max (~3,49 €/mois au lieu de 4,99 €) !"
+          q: "Puis-je résilier ou changer de formule à tout moment ?",
+          a: "Oui ! Vous pouvez gérer ou annuler votre abonnement à tout moment en 1 clic. La formule annuelle vous offre le tarif le plus avantageux, tandis que la formule mensuelle est sans engagement."
         }
       ]
-    },
-    referral: {
-      topTag: "PARRAINAGE",
-      topText: "Programme Parrainage : Invitez un ami ! Dès qu'il prend un abonnement, VOUS bénéficiez de -30% sur votre propre abonnement Pro (~2 €/mois) & Max.",
-      topLink: "En savoir plus →",
-      title: "Code de votre parrain",
-      discountPill: "SOUTENIR UN AMI",
-      desc: "Un ami utilisateur de Blink vous a partagé son lien ? Entrez son code ci-dessous pour lui faire créditer sa récompense de <strong>-30%</strong> sur son propre abonnement !",
-      inputPlaceholder: "Ex: BLINK-87847 ou ID de votre ami",
-      applyBtn: "Enregistrer le parrain",
-      removeBtn: "Retirer",
-      successMsg: "✓ Parrain {CODE} enregistré ! Votre ami recevra automatiquement ses -30% sur son abonnement Blink.",
-      errorMsg: "Code de parrainage non reconnu. Demandez à votre ami son code Blink (ex: BLINK-12345)."
     },
     footer: {
       terms: "Conditions d'utilisation",
@@ -299,16 +296,6 @@ let currentLang = localStorage.getItem('blink_lang') || 'en';
 let currentAnswerDigit = 1;
 let digitInterval = null;
 
-let activeReferralCode = null;
-
-function getStripeCheckoutUrl(baseLink) {
-  if (activeReferralCode) {
-    const cleanReferrer = activeReferralCode.replace(/^BLINK-/i, '').replace(/^#/i, '').trim();
-    return `${baseLink}?client_reference_id=REF_${encodeURIComponent(cleanReferrer)}`;
-  }
-  return baseLink;
-}
-
 const APPLE_CURSOR_SVG = `<svg class="apple-cursor" viewBox="0 0 24 24" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 2.5L18.5 14L11.5 15L15.5 22L12 24L8 17L4 21V2.5Z" fill="#000000" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -318,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initModals();
   initButtons();
   initDigitCycle();
-  initReferralSystem();
+  initBillingToggle();
 });
 
 function initDigitCycle() {
@@ -479,27 +466,6 @@ function setLanguage(lang) {
     `).join('');
   }
 
-  // Referral Promo Box & Top Bar
-  const referralTopTag = document.getElementById('referralTopTag');
-  if (referralTopTag && t.referral) referralTopTag.textContent = t.referral.topTag;
-  const referralTopText = document.getElementById('referralTopText');
-  if (referralTopText && t.referral) referralTopText.innerHTML = t.referral.topText;
-  const referralTopLink = document.getElementById('referralTopLink');
-  if (referralTopLink && t.referral) referralTopLink.textContent = t.referral.topLink;
-
-  const referralTitle = document.getElementById('referralTitle');
-  if (referralTitle && t.referral) referralTitle.textContent = t.referral.title;
-  const referralDiscountPill = document.getElementById('referralDiscountPill');
-  if (referralDiscountPill && t.referral) referralDiscountPill.textContent = t.referral.discountPill;
-  const referralDesc = document.getElementById('referralDesc');
-  if (referralDesc && t.referral) referralDesc.innerHTML = t.referral.desc;
-  const referralInput = document.getElementById('referralInput');
-  if (referralInput && t.referral) referralInput.placeholder = t.referral.inputPlaceholder;
-  const btnApplyReferralText = document.getElementById('btnApplyReferralText');
-  if (btnApplyReferralText && t.referral) btnApplyReferralText.textContent = t.referral.applyBtn;
-  const btnRemoveReferralText = document.getElementById('btnRemoveReferralText');
-  if (btnRemoveReferralText && t.referral) btnRemoveReferralText.textContent = t.referral.removeBtn;
-
   // Pro Card
   const popularBadge = document.getElementById('popularBadge');
   if (popularBadge) popularBadge.textContent = t.pricing.popularBadge;
@@ -507,14 +473,27 @@ function setLanguage(lang) {
   if (planProName) planProName.textContent = t.pricing.proPlan;
   const planProDesc = document.getElementById('planProDesc');
   if (planProDesc) planProDesc.textContent = t.pricing.proDesc;
+
+  const isYearly = currentBillingPeriod === 'yearly';
+  const proPriceVal = isYearly ? t.pricing.proPriceYearly : t.pricing.proPriceMonthly;
+  const proNoteVal = isYearly ? t.pricing.proNoteYearly : t.pricing.proNoteMonthly;
+
   const planProPrice = document.getElementById('planProPrice');
   if (planProPrice) {
-    planProPrice.innerHTML = `${t.pricing.proPrice} <span>${t.pricing.proPeriod}</span>`;
+    planProPrice.innerHTML = `${proPriceVal} <span>${t.pricing.proPeriod}</span>`;
+  }
+  const planProBillingNote = document.getElementById('planProBillingNote');
+  if (planProBillingNote) {
+    planProBillingNote.textContent = proNoteVal;
+    planProBillingNote.className = isYearly ? 'price-billing-note' : 'price-billing-note highlight';
   }
   const planProLimit = document.getElementById('planProLimit');
   if (planProLimit) planProLimit.textContent = t.pricing.proLimit;
   const btnProAction = document.getElementById('btnProAction');
-  if (btnProAction) btnProAction.textContent = t.pricing.proBtn;
+  if (btnProAction) {
+    btnProAction.textContent = t.pricing.proBtn;
+    btnProAction.href = STRIPE_LINKS.pro[currentBillingPeriod];
+  }
 
   const planProFeatures = document.getElementById('planProFeatures');
   if (planProFeatures) {
@@ -531,14 +510,26 @@ function setLanguage(lang) {
   if (planMaxName) planMaxName.textContent = t.pricing.maxPlan;
   const planMaxDesc = document.getElementById('planMaxDesc');
   if (planMaxDesc) planMaxDesc.textContent = t.pricing.maxDesc;
+
+  const maxPriceVal = isYearly ? t.pricing.maxPriceYearly : t.pricing.maxPriceMonthly;
+  const maxNoteVal = isYearly ? t.pricing.maxNoteYearly : t.pricing.maxNoteMonthly;
+
   const planMaxPrice = document.getElementById('planMaxPrice');
   if (planMaxPrice) {
-    planMaxPrice.innerHTML = `${t.pricing.maxPrice} <span>${t.pricing.maxPeriod}</span>`;
+    planMaxPrice.innerHTML = `${maxPriceVal} <span>${t.pricing.maxPeriod}</span>`;
+  }
+  const planMaxBillingNote = document.getElementById('planMaxBillingNote');
+  if (planMaxBillingNote) {
+    planMaxBillingNote.textContent = maxNoteVal;
+    planMaxBillingNote.className = isYearly ? 'price-billing-note' : 'price-billing-note highlight';
   }
   const planMaxLimit = document.getElementById('planMaxLimit');
   if (planMaxLimit) planMaxLimit.textContent = t.pricing.maxLimit;
   const btnMaxAction = document.getElementById('btnMaxAction');
-  if (btnMaxAction) btnMaxAction.textContent = t.pricing.maxBtn;
+  if (btnMaxAction) {
+    btnMaxAction.textContent = t.pricing.maxBtn;
+    btnMaxAction.href = STRIPE_LINKS.max[currentBillingPeriod];
+  }
 
   const planMaxFeatures = document.getElementById('planMaxFeatures');
   if (planMaxFeatures) {
@@ -772,7 +763,7 @@ function initButtons() {
     if (btn) {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        window.open(getStripeCheckoutUrl(STRIPE_CHECKOUT_URL), '_blank');
+        window.open(STRIPE_LINKS.pro[currentBillingPeriod], '_blank');
       });
     }
   });
@@ -781,7 +772,7 @@ function initButtons() {
   if (maxBtn) {
     maxBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      window.open(getStripeCheckoutUrl(STRIPE_CHECKOUT_URL_MAX), '_blank');
+      window.open(STRIPE_LINKS.max[currentBillingPeriod], '_blank');
     });
   }
 
@@ -812,130 +803,29 @@ function initButtons() {
   }
 }
 
-function initReferralSystem() {
-  const referralInput = document.getElementById('referralInput');
-  const btnApply = document.getElementById('btnApplyReferral');
-  const btnRemove = document.getElementById('btnRemoveReferral');
-  const feedback = document.getElementById('referralFeedback');
-  const promoCard = document.getElementById('referralPromoCard');
+function initBillingToggle() {
+  const btnYearly = document.getElementById('btnPeriodYearly');
+  const btnMonthly = document.getElementById('btnPeriodMonthly');
 
-  function isValidReferralCode(rawCode) {
-    if (!rawCode || typeof rawCode !== 'string') return false;
-    const clean = rawCode.trim().toUpperCase();
-    // 1. BLINK-XXXXX (e.g. BLINK-87847)
-    if (/^BLINK-[A-Z0-9]{4,12}$/i.test(clean)) return true;
-    // 2. 5-digit raw Device ID (e.g. 87847)
-    if (/^\d{5}$/.test(clean)) return true;
-    // 3. REF-XXXXX
-    if (/^REF-[A-Z0-9]{4,12}$/i.test(clean)) return true;
-    // 4. Special internal keys
-    if (['PARRAIN30', 'BLINK30', 'INVITE30'].includes(clean)) return true;
-    return false;
-  }
-
-  function applyCode(code, fromAuto = false) {
-    if (!code || typeof code !== 'string') return;
-    const clean = code.trim().toUpperCase();
-
-    if (!isValidReferralCode(clean)) {
-      if (feedback) {
-        feedback.className = 'referral-feedback-msg error';
-        feedback.textContent = (currentLang === 'fr')
-          ? 'Code de parrainage non reconnu. Vous devez entrer un code parrain valide fourni par un utilisateur Blink (ex: BLINK-12345).'
-          : 'Unrecognized referral code. You must enter a valid friend referral code provided by a Blink user (e.g. BLINK-12345).';
-        feedback.style.display = 'flex';
-      }
-      return;
+  function setPeriod(period) {
+    currentBillingPeriod = period;
+    if (btnYearly) {
+      btnYearly.classList.toggle('active', period === 'yearly');
+      btnYearly.setAttribute('aria-pressed', period === 'yearly');
     }
-
-    activeReferralCode = clean;
-    try {
-      localStorage.setItem('blink_referral_code', clean);
-    } catch (e) {}
-
-    if (referralInput) referralInput.value = clean;
-    if (promoCard) promoCard.classList.add('applied');
-    if (btnRemove) btnRemove.style.display = 'inline-block';
-
-    if (feedback) {
-      feedback.className = 'referral-feedback-msg success';
-      feedback.textContent = (currentLang === 'fr')
-        ? `✓ Parrain ${clean} enregistré ! Votre ami recevra ses -30% sur son propre abonnement grâce à votre commande.`
-        : `✓ Referrer ${clean} saved! Your friend will receive 30% OFF their own subscription thanks to your order.`;
-      feedback.style.display = 'flex';
+    if (btnMonthly) {
+      btnMonthly.classList.toggle('active', period === 'monthly');
+      btnMonthly.setAttribute('aria-pressed', period === 'monthly');
     }
-
-    // Refresh pricing display with discount
     applyLanguage(currentLang);
-
-    // Update button URLs with prefilled_promo_code
-    const btnPro = document.getElementById('btnProAction');
-    if (btnPro) btnPro.href = getStripeCheckoutUrl(STRIPE_CHECKOUT_URL);
-    const btnMax = document.getElementById('btnMaxAction');
-    if (btnMax) btnMax.href = getStripeCheckoutUrl(STRIPE_CHECKOUT_URL_MAX);
-
-    if (fromAuto) {
-      console.log(`[Referral] Code auto-activated: ${clean}`);
-    }
   }
 
-  function removeCode() {
-    activeReferralCode = null;
-    try {
-      localStorage.removeItem('blink_referral_code');
-    } catch (e) {}
-
-    if (referralInput) referralInput.value = '';
-    if (promoCard) promoCard.classList.remove('applied');
-    if (btnRemove) btnRemove.style.display = 'none';
-
-    if (feedback) {
-      feedback.style.display = 'none';
-      feedback.textContent = '';
-    }
-
-    applyLanguage(currentLang);
-
-    const btnPro = document.getElementById('btnProAction');
-    if (btnPro) btnPro.href = STRIPE_CHECKOUT_URL;
-    const btnMax = document.getElementById('btnMaxAction');
-    if (btnMax) btnMax.href = STRIPE_CHECKOUT_URL_MAX;
+  if (btnYearly) {
+    btnYearly.addEventListener('click', () => setPeriod('yearly'));
   }
-
-  if (btnApply) {
-    btnApply.addEventListener('click', (e) => {
-      e.preventDefault();
-      const code = referralInput ? referralInput.value : '';
-      applyCode(code);
-    });
+  if (btnMonthly) {
+    btnMonthly.addEventListener('click', () => setPeriod('monthly'));
   }
-
-  if (referralInput) {
-    referralInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        applyCode(referralInput.value);
-      }
-    });
-  }
-
-  if (btnRemove) {
-    btnRemove.addEventListener('click', (e) => {
-      e.preventDefault();
-      removeCode();
-    });
-  }
-
-  // Automatic referral detection from URL (?ref=... or ?code=... or ?parrain=...) or localStorage
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlCode = urlParams.get('ref') || urlParams.get('code') || urlParams.get('parrain') || urlParams.get('promo');
-    const savedCode = localStorage.getItem('blink_referral_code');
-    const targetCode = urlCode || savedCode;
-
-    if (targetCode) {
-      applyCode(targetCode, true);
-    }
-  } catch (e) {}
 }
+
 
