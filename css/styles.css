@@ -1446,3 +1446,250 @@ body {
 .modal-btn:hover {
   background: #f0f0f2;
 }
+
+/* ============================================================
+   Referral & Parrainage System Styles
+   ============================================================ */
+
+/* Top Announcement Bar */
+.referral-top-bar {
+  background: linear-gradient(90deg, rgba(52, 199, 89, 0.14) 0%, rgba(10, 132, 255, 0.14) 100%);
+  border-bottom: 1px solid rgba(52, 199, 89, 0.28);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 16px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  z-index: 60;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.referral-top-bar a {
+  color: #34c759;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.referral-top-bar a:hover {
+  color: #30d158;
+}
+
+.referral-top-tag {
+  background: rgba(52, 199, 89, 0.2);
+  color: #34c759;
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid rgba(52, 199, 89, 0.35);
+}
+
+/* Pricing Referral Module Box */
+.referral-promo-card {
+  max-width: 680px;
+  margin: 0 auto 36px auto;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(52, 199, 89, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 22px 26px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), 0 0 24px rgba(52, 199, 89, 0.08);
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+  text-align: left;
+}
+
+.referral-promo-card.applied {
+  border-color: rgba(52, 199, 89, 0.6);
+  background: linear-gradient(180deg, rgba(52, 199, 89, 0.09) 0%, rgba(255, 255, 255, 0.03) 100%);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 32px rgba(52, 199, 89, 0.16);
+}
+
+.referral-promo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.referral-promo-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.referral-gift-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(52, 199, 89, 0.15);
+  border: 1px solid rgba(52, 199, 89, 0.3);
+  color: #34c759;
+}
+
+.referral-gift-badge svg {
+  width: 17px;
+  height: 17px;
+}
+
+.referral-promo-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.referral-discount-pill {
+  background: #34c759;
+  color: #000000;
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.04em;
+}
+
+.referral-promo-desc {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-bottom: 16px;
+}
+
+.referral-promo-desc strong {
+  color: #ffffff;
+}
+
+.referral-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.referral-input-field {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 14.5px;
+  padding: 12px 18px;
+  border-radius: var(--radius-full);
+  outline: none;
+  transition: var(--transition);
+}
+
+.referral-input-field:focus {
+  border-color: #34c759;
+  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.2);
+}
+
+.referral-input-field::placeholder {
+  color: #636366;
+}
+
+.btn-apply-referral {
+  background: #34c759;
+  color: #000000;
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 22px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.btn-apply-referral:hover {
+  background: #30d158;
+  transform: translateY(-1px);
+}
+
+.btn-remove-referral {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 11px 16px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-remove-referral:hover {
+  color: #ff453a;
+  border-color: rgba(255, 69, 58, 0.4);
+}
+
+.referral-feedback-msg {
+  margin-top: 12px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.referral-feedback-msg.success {
+  color: #34c759;
+}
+
+.referral-feedback-msg.error {
+  color: #ff453a;
+}
+
+/* Old Price Struck */
+.price-old-struck {
+  font-size: 24px;
+  color: var(--text-muted);
+  text-decoration: line-through;
+  margin-right: 8px;
+  font-weight: 500;
+}
+
+.price-discount-tag {
+  display: inline-block;
+  background: rgba(52, 199, 89, 0.16);
+  color: #34c759;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(52, 199, 89, 0.3);
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+@media (max-width: 640px) {
+  .referral-input-row {
+    flex-direction: column;
+  }
+  .referral-input-field, .btn-apply-referral, .btn-remove-referral {
+    width: 100%;
+  }
+  .referral-top-bar {
+    font-size: 12px;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+

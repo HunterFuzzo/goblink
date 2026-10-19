@@ -25,6 +25,13 @@
   <!-- Ambient Light Background -->
   <div class="bg-glow"></div>
 
+  <!-- Referral Top Announcement Bar -->
+  <div class="referral-top-bar" id="referralTopBar">
+    <span class="referral-top-tag" id="referralTopTag">OFFRE -30%</span>
+    <span id="referralTopText">Programme Parrainage : Profitez de -30% immédiat sur Pro (~2 €/mois) & Max avec le code <strong>PARRAIN30</strong> ou le lien d'un ami !</span>
+    <a href="#pricing" id="referralTopLink">Activer l'offre →</a>
+  </div>
+
   <!-- Navigation Bar -->
   <header class="navbar">
     <!-- Round Menu Button & Dropdown (Screenshot 1 & 2) -->
@@ -239,6 +246,38 @@
         Find answers to questions on your screen with AI.
       </p>
 
+      <!-- Referral Promo Code Card -->
+      <div class="referral-promo-card" id="referralPromoCard">
+        <div class="referral-promo-header">
+          <div class="referral-promo-title-wrap">
+            <div class="referral-gift-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                <rect x="2" y="7" width="20" height="5"></rect>
+                <line x1="12" y1="22" x2="12" y2="7"></line>
+                <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+              </svg>
+            </div>
+            <span class="referral-promo-title" id="referralTitle">Code de parrainage</span>
+          </div>
+          <span class="referral-discount-pill" id="referralDiscountPill">-30% IMMÉDIAT</span>
+        </div>
+        <p class="referral-promo-desc" id="referralDesc">
+          Vous avez été invité par un ami ou possédez un code ? Entrez-le ci-dessous pour réduire le prix de Pro à <strong>2,09 €/mois</strong> (au lieu de 2,99 €) et Max à <strong>3,49 €/mois</strong>.
+        </p>
+        <div class="referral-input-row">
+          <input type="text" id="referralInput" class="referral-input-field" placeholder="Ex: PARRAIN30 ou code d'un ami" autocomplete="off" spellcheck="false" />
+          <button type="button" id="btnApplyReferral" class="btn-apply-referral">
+            <span id="btnApplyReferralText">Appliquer (-30%)</span>
+          </button>
+          <button type="button" id="btnRemoveReferral" class="btn-remove-referral" style="display: none;">
+            <span id="btnRemoveReferralText">Retirer</span>
+          </button>
+        </div>
+        <div class="referral-feedback-msg" id="referralFeedback" style="display: none;"></div>
+      </div>
+
       <!-- 3 Pricing Cards -->
       <div class="pricing-grid">
         <!-- Free Card -->
@@ -423,6 +462,17 @@
           </div>
           <div class="faq-answer">
             <p>Blink supports Windows 10 & 11 (64-bit), as well as macOS (Apple Silicon M1, M2, M3, M4 and Intel Macs running macOS 12 Monterey up to macOS 15 Sequoia).</p>
+          </div>
+        </div>
+        <div class="faq-item" data-index="7">
+          <div class="faq-question">
+            <span id="faqReferralQ">How does the referral program work?</span>
+            <span class="faq-toggle-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+          </div>
+          <div class="faq-answer">
+            <p id="faqReferralA">When you join using a friend's referral link or enter a referral promo code (such as <strong>PARRAIN30</strong>), you get an immediate <strong>30% discount</strong> on both Pro and Max plans. The Pro plan drops to <strong>2.09 € / month</strong> (around 2 €/month instead of 2.99 €) and Max drops to <strong>3.49 € / month</strong>. The discount is automatically applied to your secure Stripe checkout.</p>
           </div>
         </div>
       </div>

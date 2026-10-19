@@ -117,8 +117,25 @@ const TRANSLATIONS = {
         {
           q: "Which operating systems and hardware are supported?",
           a: "Blink supports Windows 10 & 11 (64-bit), as well as macOS (Apple Silicon M1, M2, M3, M4 and Intel Macs running macOS 12 Monterey up to macOS 15 Sequoia)."
+        },
+        {
+          q: "How does the referral program work?",
+          a: "When you join using a friend's referral link or promo code (like <strong>PARRAIN30</strong>), you instantly get <strong>30% OFF</strong> both Pro and Max plans. The Pro plan drops to <strong>2.09 € / month</strong> (around 2 €/mo instead of 2.99 €) and Max drops to <strong>3.49 € / month</strong>. The discount is automatically reflected at checkout."
         }
       ]
+    },
+    referral: {
+      topTag: "30% OFF OFFER",
+      topText: "Referral Program: Get 30% OFF Pro (~2 €/mo) & Max with code <strong>PARRAIN30</strong> or a friend's link!",
+      topLink: "Claim discount →",
+      title: "Referral Code",
+      discountPill: "30% OFF APPLIED",
+      desc: "Invited by a friend or have a promo code? Enter it below to discount Pro to <strong>2.09 € / month</strong> (instead of 2.99 €) and Max to <strong>3.49 € / month</strong>.",
+      inputPlaceholder: "e.g. PARRAIN30 or friend's code",
+      applyBtn: "Apply (-30%)",
+      removeBtn: "Remove",
+      successMsg: "✓ Code {CODE} activated: 30% OFF applied on Pro (2.09 €/mo) and Max (3.49 €/mo)!",
+      errorMsg: "Please enter a valid referral code (e.g. PARRAIN30)."
     },
     footer: {
       terms: "Terms of Service",
@@ -242,8 +259,25 @@ const TRANSLATIONS = {
         {
           q: "Quels systèmes d'exploitation sont compatibles ?",
           a: "Blink est optimisé pour Windows 10 et 11 (64 bits), ainsi que macOS (puces Apple Silicon M1, M2, M3, M4 et processeurs Intel sous macOS 12 Monterey jusqu'à macOS 15 Sequoia)."
+        },
+        {
+          q: "Comment fonctionne le système de parrainage ?",
+          a: "En utilisant le lien d'un ami ou un code de parrainage (comme <strong>PARRAIN30</strong>), vous bénéficiez immédiatement de <strong>-30% de réduction</strong> sur Pro et Max. Le plan Pro passe ainsi à <strong>2,09 € / mois</strong> (environ 2 €/mois au lieu de 2,99 €) et Max à <strong>3,49 € / mois</strong>. La réduction est appliquée automatiquement lors du paiement sécurisé Stripe."
         }
       ]
+    },
+    referral: {
+      topTag: "OFFRE -30%",
+      topText: "Programme Parrainage : Profitez de -30% immédiat sur Pro (~2 €/mois) & Max avec le code <strong>PARRAIN30</strong> ou le lien d'un ami !",
+      topLink: "Activer l'offre →",
+      title: "Code de parrainage",
+      discountPill: "-30% IMMÉDIAT",
+      desc: "Vous avez été invité par un ami ou possédez un code ? Entrez-le ci-dessous pour réduire le prix de Pro à <strong>2,09 €/mois</strong> (au lieu de 2,99 €) et Max à <strong>3,49 €/mois</strong>.",
+      inputPlaceholder: "Ex: PARRAIN30 ou code d'un ami",
+      applyBtn: "Appliquer (-30%)",
+      removeBtn: "Retirer",
+      successMsg: "✓ Code {CODE} activé : -30% immédiat sur Pro (2,09 €/mois) et Max (3,49 €/mois) !",
+      errorMsg: "Veuillez entrer un code de parrainage valide (ex: PARRAIN30)."
     },
     footer: {
       terms: "Conditions d'utilisation",
@@ -265,6 +299,17 @@ let currentLang = localStorage.getItem('blink_lang') || 'en';
 let currentAnswerDigit = 1;
 let digitInterval = null;
 
+let activeReferralCode = null;
+
+function getStripeCheckoutUrl(baseLink) {
+  if (activeReferralCode) {
+    const knownCodes = ['PARRAIN30', 'BLINK30', 'INVITE30', 'PARRAIN', 'PARRAINAGE', 'AMIS30', 'REF30'];
+    const stripeCode = knownCodes.includes(activeReferralCode.toUpperCase()) ? activeReferralCode.toUpperCase() : 'PARRAIN30';
+    return `${baseLink}?prefilled_promo_code=${encodeURIComponent(stripeCode)}`;
+  }
+  return baseLink;
+}
+
 const APPLE_CURSOR_SVG = `<svg class="apple-cursor" viewBox="0 0 24 24" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 2.5L18.5 14L11.5 15L15.5 22L12 24L8 17L4 21V2.5Z" fill="#000000" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -274,6 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initModals();
   initButtons();
   initDigitCycle();
+  initReferralSystem();
 });
 
 function initDigitCycle() {
@@ -434,6 +480,27 @@ function setLanguage(lang) {
     `).join('');
   }
 
+  // Referral Promo Box & Top Bar
+  const referralTopTag = document.getElementById('referralTopTag');
+  if (referralTopTag && t.referral) referralTopTag.textContent = t.referral.topTag;
+  const referralTopText = document.getElementById('referralTopText');
+  if (referralTopText && t.referral) referralTopText.innerHTML = t.referral.topText;
+  const referralTopLink = document.getElementById('referralTopLink');
+  if (referralTopLink && t.referral) referralTopLink.textContent = t.referral.topLink;
+
+  const referralTitle = document.getElementById('referralTitle');
+  if (referralTitle && t.referral) referralTitle.textContent = t.referral.title;
+  const referralDiscountPill = document.getElementById('referralDiscountPill');
+  if (referralDiscountPill && t.referral) referralDiscountPill.textContent = t.referral.discountPill;
+  const referralDesc = document.getElementById('referralDesc');
+  if (referralDesc && t.referral) referralDesc.innerHTML = t.referral.desc;
+  const referralInput = document.getElementById('referralInput');
+  if (referralInput && t.referral) referralInput.placeholder = t.referral.inputPlaceholder;
+  const btnApplyReferralText = document.getElementById('btnApplyReferralText');
+  if (btnApplyReferralText && t.referral) btnApplyReferralText.textContent = t.referral.applyBtn;
+  const btnRemoveReferralText = document.getElementById('btnRemoveReferralText');
+  if (btnRemoveReferralText && t.referral) btnRemoveReferralText.textContent = t.referral.removeBtn;
+
   // Pro Card
   const popularBadge = document.getElementById('popularBadge');
   if (popularBadge) popularBadge.textContent = t.pricing.popularBadge;
@@ -442,7 +509,14 @@ function setLanguage(lang) {
   const planProDesc = document.getElementById('planProDesc');
   if (planProDesc) planProDesc.textContent = t.pricing.proDesc;
   const planProPrice = document.getElementById('planProPrice');
-  if (planProPrice) planProPrice.innerHTML = `${t.pricing.proPrice} <span>${t.pricing.proPeriod}</span>`;
+  if (planProPrice) {
+    if (activeReferralCode) {
+      const discountedPro = (currentLang === 'fr') ? '2,09 €' : '2.09 €';
+      planProPrice.innerHTML = `<span class="price-old-struck">${t.pricing.proPrice}</span> ${discountedPro} <span>${t.pricing.proPeriod}</span> <span class="price-discount-tag">-30%</span>`;
+    } else {
+      planProPrice.innerHTML = `${t.pricing.proPrice} <span>${t.pricing.proPeriod}</span>`;
+    }
+  }
   const planProLimit = document.getElementById('planProLimit');
   if (planProLimit) planProLimit.textContent = t.pricing.proLimit;
   const btnProAction = document.getElementById('btnProAction');
@@ -464,7 +538,14 @@ function setLanguage(lang) {
   const planMaxDesc = document.getElementById('planMaxDesc');
   if (planMaxDesc) planMaxDesc.textContent = t.pricing.maxDesc;
   const planMaxPrice = document.getElementById('planMaxPrice');
-  if (planMaxPrice) planMaxPrice.innerHTML = `${t.pricing.maxPrice} <span>${t.pricing.maxPeriod}</span>`;
+  if (planMaxPrice) {
+    if (activeReferralCode) {
+      const discountedMax = (currentLang === 'fr') ? '3,49 €' : '3.49 €';
+      planMaxPrice.innerHTML = `<span class="price-old-struck">${t.pricing.maxPrice}</span> ${discountedMax} <span>${t.pricing.maxPeriod}</span> <span class="price-discount-tag">-30%</span>`;
+    } else {
+      planMaxPrice.innerHTML = `${t.pricing.maxPrice} <span>${t.pricing.maxPeriod}</span>`;
+    }
+  }
   const planMaxLimit = document.getElementById('planMaxLimit');
   if (planMaxLimit) planMaxLimit.textContent = t.pricing.maxLimit;
   const btnMaxAction = document.getElementById('btnMaxAction');
@@ -702,7 +783,7 @@ function initButtons() {
     if (btn) {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        window.open(STRIPE_CHECKOUT_URL, '_blank');
+        window.open(getStripeCheckoutUrl(STRIPE_CHECKOUT_URL), '_blank');
       });
     }
   });
@@ -711,7 +792,7 @@ function initButtons() {
   if (maxBtn) {
     maxBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      window.open(STRIPE_CHECKOUT_URL_MAX, '_blank');
+      window.open(getStripeCheckoutUrl(STRIPE_CHECKOUT_URL_MAX), '_blank');
     });
   }
 
@@ -741,3 +822,116 @@ function initButtons() {
     });
   }
 }
+
+function initReferralSystem() {
+  const referralInput = document.getElementById('referralInput');
+  const btnApply = document.getElementById('btnApplyReferral');
+  const btnRemove = document.getElementById('btnRemoveReferral');
+  const feedback = document.getElementById('referralFeedback');
+  const promoCard = document.getElementById('referralPromoCard');
+
+  function applyCode(code, fromAuto = false) {
+    if (!code || typeof code !== 'string') return;
+    const clean = code.trim().toUpperCase();
+    if (clean.length < 2) {
+      if (feedback) {
+        feedback.className = 'referral-feedback-msg error';
+        feedback.textContent = (currentLang === 'fr')
+          ? 'Veuillez entrer un code de parrainage valide (ex: PARRAIN30).'
+          : 'Please enter a valid referral code (e.g. PARRAIN30).';
+        feedback.style.display = 'flex';
+      }
+      return;
+    }
+
+    activeReferralCode = clean;
+    try {
+      localStorage.setItem('blink_referral_code', clean);
+    } catch (e) {}
+
+    if (referralInput) referralInput.value = clean;
+    if (promoCard) promoCard.classList.add('applied');
+    if (btnRemove) btnRemove.style.display = 'inline-block';
+
+    if (feedback) {
+      feedback.className = 'referral-feedback-msg success';
+      feedback.textContent = (currentLang === 'fr')
+        ? `✓ Code ${clean} activé ! -30% appliqué : Pro à ~2 €/mois (2,09 €) et Max à 3,49 €/mois.`
+        : `✓ Code ${clean} applied! 30% OFF applied: Pro at ~2 €/mo (2.09 €) and Max at 3.49 €/mo.`;
+      feedback.style.display = 'flex';
+    }
+
+    // Refresh pricing display with discount
+    applyLanguage(currentLang);
+
+    // Update button URLs with prefilled_promo_code
+    const btnPro = document.getElementById('btnProAction');
+    if (btnPro) btnPro.href = getStripeCheckoutUrl(STRIPE_CHECKOUT_URL);
+    const btnMax = document.getElementById('btnMaxAction');
+    if (btnMax) btnMax.href = getStripeCheckoutUrl(STRIPE_CHECKOUT_URL_MAX);
+
+    if (fromAuto) {
+      console.log(`[Referral] Code auto-activated: ${clean}`);
+    }
+  }
+
+  function removeCode() {
+    activeReferralCode = null;
+    try {
+      localStorage.removeItem('blink_referral_code');
+    } catch (e) {}
+
+    if (referralInput) referralInput.value = '';
+    if (promoCard) promoCard.classList.remove('applied');
+    if (btnRemove) btnRemove.style.display = 'none';
+
+    if (feedback) {
+      feedback.style.display = 'none';
+      feedback.textContent = '';
+    }
+
+    applyLanguage(currentLang);
+
+    const btnPro = document.getElementById('btnProAction');
+    if (btnPro) btnPro.href = STRIPE_CHECKOUT_URL;
+    const btnMax = document.getElementById('btnMaxAction');
+    if (btnMax) btnMax.href = STRIPE_CHECKOUT_URL_MAX;
+  }
+
+  if (btnApply) {
+    btnApply.addEventListener('click', (e) => {
+      e.preventDefault();
+      const code = referralInput ? referralInput.value : '';
+      applyCode(code);
+    });
+  }
+
+  if (referralInput) {
+    referralInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        applyCode(referralInput.value);
+      }
+    });
+  }
+
+  if (btnRemove) {
+    btnRemove.addEventListener('click', (e) => {
+      e.preventDefault();
+      removeCode();
+    });
+  }
+
+  // Automatic referral detection from URL (?ref=... or ?code=... or ?parrain=...) or localStorage
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlCode = urlParams.get('ref') || urlParams.get('code') || urlParams.get('parrain') || urlParams.get('promo');
+    const savedCode = localStorage.getItem('blink_referral_code');
+    const targetCode = urlCode || savedCode;
+
+    if (targetCode) {
+      applyCode(targetCode, true);
+    }
+  } catch (e) {}
+}
+
