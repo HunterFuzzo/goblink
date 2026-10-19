@@ -10,15 +10,15 @@
   <meta property="og:title" content="Blink — Point at the question. Get the answer.">
   <meta property="og:description" content="AI answers for any question on screen. Designed for macOS.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://goblink.vercel.app">
-  <meta property="og:image" content="https://goblink.vercel.app/public/assets/blink_icon.png">
+  <meta property="og:url" content="https://thisisblink.vercel.app">
+  <meta property="og:image" content="https://thisisblink.vercel.app/public/assets/blink_icon.png">
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="public/assets/blink_icon.png">
   <link rel="apple-touch-icon" href="public/assets/blink_icon.png">
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=1.2.5">
+  <link rel="stylesheet" href="css/styles.css?v=1.2.6">
 </head>
 <body>
 
@@ -27,9 +27,9 @@
 
   <!-- Referral Top Announcement Bar -->
   <div class="referral-top-bar" id="referralTopBar">
-    <span class="referral-top-tag" id="referralTopTag">OFFRE -30%</span>
-    <span id="referralTopText">Programme Parrainage : Profitez de -30% immédiat sur Pro (~2 €/mois) & Max avec le code <strong>PARRAIN30</strong> ou le lien d'un ami !</span>
-    <a href="#pricing" id="referralTopLink">Activer l'offre →</a>
+    <span class="referral-top-tag" id="referralTopTag">PARRAINAGE</span>
+    <span id="referralTopText">Programme Parrainage : Invité par un ami ? Utilisez votre code ou lien pour débloquer -30% immédiat sur Pro (~2 €/mois) & Max !</span>
+    <a href="#pricing" id="referralTopLink">Activer mon offre →</a>
   </div>
 
   <!-- Navigation Bar -->
@@ -264,12 +264,12 @@
           <span class="referral-discount-pill" id="referralDiscountPill">-30% IMMÉDIAT</span>
         </div>
         <p class="referral-promo-desc" id="referralDesc">
-          Vous avez été invité par un ami ou possédez un code ? Entrez-le ci-dessous pour réduire le prix de Pro à <strong>2,09 €/mois</strong> (au lieu de 2,99 €) et Max à <strong>3,49 €/mois</strong>.
+          Vous avez été invité par un ami utilisateur de Blink ? Entrez son code parrain pour débloquer <strong>-30% immédiat</strong> : Pro à <strong>2,09 €/mois</strong> (au lieu de 2,99 €) et Max à <strong>3,49 €/mois</strong>.
         </p>
         <div class="referral-input-row">
-          <input type="text" id="referralInput" class="referral-input-field" placeholder="Ex: PARRAIN30 ou code d'un ami" autocomplete="off" spellcheck="false" />
+          <input type="text" id="referralInput" class="referral-input-field" placeholder="Ex: BLINK-87847 ou ID parrain" autocomplete="off" spellcheck="false" />
           <button type="button" id="btnApplyReferral" class="btn-apply-referral">
-            <span id="btnApplyReferralText">Appliquer (-30%)</span>
+            <span id="btnApplyReferralText">Valider le code</span>
           </button>
           <button type="button" id="btnRemoveReferral" class="btn-remove-referral" style="display: none;">
             <span id="btnRemoveReferralText">Retirer</span>
