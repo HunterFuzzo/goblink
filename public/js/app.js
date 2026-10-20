@@ -58,6 +58,8 @@ const TRANSLATIONS = {
       titlePre: "Start",
       titlePost: "for free.",
       subtitle: "Find answers to questions on your screen with AI.",
+      billingYearly: "Yearly",
+      billingMonthly: "Monthly",
       freePlan: "Free",
       freeDesc: "Try Blink before you subscribe.",
       freePrice: "0 €",
@@ -193,6 +195,8 @@ const TRANSLATIONS = {
       titlePre: "Commencez",
       titlePost: "gratuitement.",
       subtitle: "Trouvez les réponses aux questions sur votre écran grâce à l'IA.",
+      billingYearly: "Annuel",
+      billingMonthly: "Mensuel",
       freePlan: "Gratuit",
       freeDesc: "Essayez Blink avant de vous abonner.",
       freePrice: "0 €",
@@ -583,6 +587,8 @@ function setLanguage(lang) {
   if (inputLicenseKey) inputLicenseKey.placeholder = t.modal.keyPlaceholder;
   const btnCheckLicense = document.getElementById('btnCheckLicense');
   if (btnCheckLicense) btnCheckLicense.textContent = t.modal.checkBtn;
+
+  updatePricingUI();
 }
 
 function initMenuDropdown() {
@@ -803,29 +809,93 @@ function initButtons() {
   }
 }
 
+function updatePricingUI() {
+  const t = (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[currentLang]) ? TRANSLATIONS[currentLang] : (TRANSLATIONS && TRANSLATIONS.en);
+  if (!t || !t.pricing) return;
+
+  const isYearly = currentBillingPeriod === 'yearly';
+
+  // Toggle button active states & aria
+  const btnYearly = document.getElementById('btnPeriodYearly');
+  const btnMonthly = document.getElementById('btnPeriodMonthly');
+  if (btnYearly) {
+    btnYearly.classList.toggle('active', isYearly);
+    btnYearly.setAttribute('aria-pressed', isYearly ? 'true' : 'false');
+  }
+  if (btnMonthly) {
+    btnMonthly.classList.toggle('active', !isYearly);
+    btnMonthly.setAttribute('aria-pressed', !isYearly ? 'true' : 'false');
+  }
+
+  // Toggle labels
+  const labelYearly = document.getElementById('labelYearly');
+  if (labelYearly && t.pricing.billingYearly) labelYearly.textContent = t.pricing.billingYearly;
+  const labelMonthly = document.getElementById('labelMonthly');
+  if (labelMonthly && t.pricing.billingMonthly) labelMonthly.textContent = t.pricing.billingMonthly;
+
+  // Pro Card Pricing
+  const proPriceVal = isYearly ? t.pricing.proPriceYearly : t.pricing.proPriceMonthly;
+  const proNoteVal = isYearly ? t.pricing.proNoteYearly : t.pricing.proNoteMonthly;
+  const planProPrice = document.getElementById('planProPrice');
+  if (planProPrice) {
+    planProPrice.innerHTML = `${proPriceVal} <span>${t.pricing.proPeriod}</span>`;
+  }
+  const planProBillingNote = document.getElementById('planProBillingNote');
+  if (planProBillingNote) {
+    planProBillingNote.textContent = proNoteVal;
+    planProBillingNote.className = isYearly ? 'price-billing-note' : 'price-billing-note highlight';
+  }
+  const btnProAction = document.getElementById('btnProAction');
+  if (btnProAction) {
+    btnProAction.href = STRIPE_LINKS.pro[currentBillingPeriod];
+  }
+
+  // Max Card Pricing
+  const maxPriceVal = isYearly ? t.pricing.maxPriceYearly : t.pricing.maxPriceMonthly;
+  const maxNoteVal = isYearly ? t.pricing.maxNoteYearly : t.pricing.maxNoteMonthly;
+  const planMaxPrice = document.getElementById('planMaxPrice');
+  if (planMaxPrice) {
+    planMaxPrice.innerHTML = `${maxPriceVal} <span>${t.pricing.maxPeriod}</span>`;
+  }
+  const planMaxBillingNote = document.getElementById('planMaxBillingNote');
+  if (planMaxBillingNote) {
+    planMaxBillingNote.textContent = maxNoteVal;
+    planMaxBillingNote.className = isYearly ? 'price-billing-note' : 'price-billing-note highlight';
+  }
+  const btnMaxAction = document.getElementById('btnMaxAction');
+  if (btnMaxAction) {
+    btnMaxAction.href = STRIPE_LINKS.max[currentBillingPeriod];
+  }
+}
+
+function applyLanguage(lang) {
+  setLanguage(lang);
+}
+
 function initBillingToggle() {
   const btnYearly = document.getElementById('btnPeriodYearly');
   const btnMonthly = document.getElementById('btnPeriodMonthly');
 
   function setPeriod(period) {
     currentBillingPeriod = period;
-    if (btnYearly) {
-      btnYearly.classList.toggle('active', period === 'yearly');
-      btnYearly.setAttribute('aria-pressed', period === 'yearly');
-    }
-    if (btnMonthly) {
-      btnMonthly.classList.toggle('active', period === 'monthly');
-      btnMonthly.setAttribute('aria-pressed', period === 'monthly');
-    }
-    applyLanguage(currentLang);
+    updatePricingUI();
   }
 
   if (btnYearly) {
-    btnYearly.addEventListener('click', () => setPeriod('yearly'));
+    btnYearly.addEventListener('click', (e) => {
+      e.preventDefault();
+      setPeriod('yearly');
+    });
   }
   if (btnMonthly) {
-    btnMonthly.addEventListener('click', () => setPeriod('monthly'));
+    btnMonthly.addEventListener('click', (e) => {
+      e.preventDefault();
+      setPeriod('monthly');
+    });
   }
+
+  // Initial render
+  updatePricingUI();
 }
 
 
