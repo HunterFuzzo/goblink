@@ -966,6 +966,56 @@ body {
   flex-shrink: 0;
 }
 
+.mode-app-guide {
+  margin-top: 11px;
+  display: flex;
+  align-items: center;
+}
+
+.mode-guide-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: var(--transition);
+  padding: 3px 0;
+  line-height: 1.3;
+}
+
+.mode-guide-link:hover {
+  color: #ffffff;
+}
+
+.mode-guide-link:hover span {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.mode-guide-link svg.guide-icon-help {
+  width: 13px;
+  height: 13px;
+  stroke: currentColor;
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+.mode-guide-link svg.guide-icon-arrow {
+  width: 11px;
+  height: 11px;
+  stroke: currentColor;
+  opacity: 0.6;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.mode-guide-link:hover svg.guide-icon-arrow {
+  transform: translate(2px, -2px);
+  opacity: 1;
+  stroke: #ffffff;
+}
+
 /* Pricing Section (Screenshot 3) */
 .pricing-section {
   padding: 120px 0 100px;

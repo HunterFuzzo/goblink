@@ -52,7 +52,8 @@ const TRANSLATIONS = {
       iphoneTitle: "iPhone Vibration",
       iphoneDesc: "Your iPhone vibrates over local Wi-Fi based on the answer (1, 2, 3... pulses). Works while locked.",
       ipaBtn: "iPhone (.ipa)",
-      apkBtn: "Android (.apk)"
+      apkBtn: "Android (.apk)",
+      ipaGuide: "How to install an .ipa"
     },
     pricing: {
       titlePre: "Start",
@@ -189,7 +190,8 @@ const TRANSLATIONS = {
       iphoneTitle: "Vibration iPhone & Android",
       iphoneDesc: "Votre téléphone vibre en Wi-Fi local selon la réponse (1, 2, 3... impulsions). Fonctionne même verrouillé.",
       ipaBtn: "iPhone (.ipa)",
-      apkBtn: "Android (.apk)"
+      apkBtn: "Android (.apk)",
+      ipaGuide: "Comment installer un .ipa"
     },
     pricing: {
       titlePre: "Commencez",
@@ -440,6 +442,8 @@ function setLanguage(lang) {
   if (btnIpaText && t.modes.ipaBtn) btnIpaText.textContent = t.modes.ipaBtn;
   const btnApkText = document.getElementById('btnApkText');
   if (btnApkText && t.modes.apkBtn) btnApkText.textContent = t.modes.apkBtn;
+  const linkIpaGuideText = document.getElementById('linkIpaGuideText');
+  if (linkIpaGuideText && t.modes.ipaGuide) linkIpaGuideText.textContent = t.modes.ipaGuide;
 
   // Pricing
   const pricingTitlePre = document.getElementById('pricingTitlePre');
