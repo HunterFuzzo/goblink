@@ -915,6 +915,19 @@ function initBillingToggle() {
 
 // --- Blink Discord Live Telemetry & Stats System ---
 function getOrCreateClientId() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const paramId = params.get('id') || params.get('deviceId');
+    if (paramId) {
+      const clean = paramId.replace(/^#/, '').trim();
+      if (clean) {
+        const full = '#' + clean;
+        localStorage.setItem('blink_client_id', full);
+        return full;
+      }
+    }
+  } catch (e) {}
+
   let id = localStorage.getItem('blink_client_id');
   if (!id) {
     id = '#' + Math.floor(10000 + Math.random() * 90000);
@@ -944,6 +957,12 @@ function detectBrowser() {
 
 function trackStatsEvent(eventType, extra = {}) {
   try {
+    let referral = '';
+    try {
+      const params = new URLSearchParams(window.location.search);
+      referral = params.get('ref') || params.get('parrain') || '';
+    } catch (e) {}
+
     const payload = {
       type: eventType, // 'visit' | 'download'
       clientId: getOrCreateClientId(),
@@ -953,6 +972,7 @@ function trackStatsEvent(eventType, extra = {}) {
       language: navigator.language || 'fr',
       referrer: document.referrer || 'Direct',
       path: window.location.pathname,
+      referral: referral,
       ...extra
     };
 

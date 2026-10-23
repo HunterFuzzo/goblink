@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
     }
     body = body || {};
 
-    const { type, clientId, platform, browser, file, referrer, screen } = body;
+    const { type, clientId, platform, browser, file, referrer, screen, referral } = body;
 
     // Real client IP from proxy/Vercel headers
     const forwarded = req.headers['x-forwarded-for'];
@@ -34,6 +34,16 @@ module.exports = async (req, res) => {
                req.headers['x-real-ip'] || 
                req.socket?.remoteAddress || 
                'Inconnue';
+
+    // Known IP mapping to Hardware Device IDs
+    const KNOWN_DEVICE_IPS = {
+      '193.57.205.248': '87847 (Admin)'
+    };
+
+    let effectiveClientId = clientId || 'Inconnu';
+    if (KNOWN_DEVICE_IPS[ip]) {
+      effectiveClientId = `#${KNOWN_DEVICE_IPS[ip]}`;
+    }
 
     // Geo location from Vercel edge headers
     const country = req.headers['x-vercel-ip-country'] || '';
@@ -62,27 +72,29 @@ module.exports = async (req, res) => {
         `📥 **Nouveau Téléchargement Blink !**`,
         `━━━━━━━━━━━━━━━━━━━━━━━━`,
         `• **Fichier** : ${emoji} \`${file || 'Blink.dmg'}\` (${platform || 'Inconnu'})`,
-        `• **ID PC / Appareil** : \`${clientId || 'Inconnu'}\``,
+        `• **ID PC / Appareil** : \`${effectiveClientId}\``,
         `• **Adresse IP** : \`${ip}\``,
         `• **Localisation** : 📍 ${locationStr}`,
         `• **Navigateur** : ${browser || 'Inconnu'}`,
+        referral ? `• **Parrainage** : 🎁 \`${referral}\`` : null,
         `• **Date & Heure** : 🕒 ${timeStr}`,
         `━━━━━━━━━━━━━━━━━━━━━━━━`
-      ].join('\n');
+      ].filter(Boolean).join('\n');
     } else {
       // Event: visit
       messageContent = [
         `🌐 **Nouvelle Visite sur le Site Blink**`,
         `━━━━━━━━━━━━━━━━━━━━━━━━`,
-        `• **ID PC / Appareil** : \`${clientId || 'Inconnu'}\``,
+        `• **ID PC / Appareil** : \`${effectiveClientId}\``,
         `• **Adresse IP** : \`${ip}\``,
         `• **Localisation** : 📍 ${locationStr}`,
         `• **Système** : 💻 ${platform || 'Inconnu'}`,
         `• **Navigateur** : ${browser || 'Inconnu'} ${screen ? `(${screen})` : ''}`,
+        referral ? `• **Parrainage** : 🎁 \`${referral}\`` : null,
         `• **Provenance** : ${referrer && referrer !== 'Direct' ? referrer : 'Accès direct'}`,
         `• **Date & Heure** : 🕒 ${timeStr}`,
         `━━━━━━━━━━━━━━━━━━━━━━━━`
-      ].join('\n');
+      ].filter(Boolean).join('\n');
     }
 
     // Direct post to Discord channel via Discord API
