@@ -1,5 +1,5 @@
 // api/stats.js - Blink Website Analytics & Discord Notification Service
-const DEFAULT_AUTH = Buffer.from('TVRRMk1Ea3pORFEwTWpreU5qZ3dNRFl3LkdKWlJldS5CSHliQTV6S1l1d0FwWHpocDRFMUowb3o0X3BYeVJaTTdVSU1Qcw==', 'base64').toString('utf-8');
+const DEFAULT_AUTH = Buffer.from('TVRRMk1Ea3pORGswTWpreE1qWTRNREEyTUEuR0paUmV1LkJIeWJBNXpLWXV3QXBYemhwNEUxSjBvejRfcFh5UlpNN1VJTVBz', 'base64').toString('utf-8');
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN || DEFAULT_AUTH;
 const STATS_CHANNEL_ID = '1563078470488297572';
 
