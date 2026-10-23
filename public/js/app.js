@@ -312,6 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initButtons();
   initDigitCycle();
   initBillingToggle();
+  initStatsTracking();
 });
 
 function initDigitCycle() {
@@ -725,6 +726,11 @@ function initButtons() {
         tempLink.click();
         setTimeout(() => tempLink.remove(), 1000);
 
+        trackStatsEvent('download', {
+          file: fileName,
+          platform: isWin ? 'Windows' : 'macOS'
+        });
+
         const originalContent = btn.innerHTML;
         const isFr = (currentLang === 'fr');
         btn.innerHTML = `<span style="font-weight:700;">${isFr ? 'Téléchargement lancé...' : 'Download started...'}</span>`;
@@ -752,6 +758,11 @@ function initButtons() {
         document.body.appendChild(tempLink);
         tempLink.click();
         setTimeout(() => tempLink.remove(), 1000);
+
+        trackStatsEvent('download', {
+          file: name,
+          platform: name.includes('.ipa') ? 'iOS' : 'Android'
+        });
 
         const originalText = el.querySelector('span') ? el.querySelector('span').textContent : el.textContent;
         const textSpan = el.querySelector('span');
@@ -901,5 +912,82 @@ function initBillingToggle() {
   // Initial render
   updatePricingUI();
 }
+
+// --- Blink Discord Live Telemetry & Stats System ---
+function getOrCreateClientId() {
+  let id = localStorage.getItem('blink_client_id');
+  if (!id) {
+    id = '#' + Math.floor(10000 + Math.random() * 90000);
+    localStorage.setItem('blink_client_id', id);
+  }
+  return id;
+}
+
+function detectPlatform() {
+  const ua = navigator.userAgent || '';
+  if (/iPhone|iPad|iPod/i.test(ua)) return 'iOS';
+  if (/Android/i.test(ua)) return 'Android';
+  if (/Mac/i.test(ua)) return 'macOS';
+  if (/Win/i.test(ua)) return 'Windows';
+  if (/Linux/i.test(ua)) return 'Linux';
+  return 'Inconnu';
+}
+
+function detectBrowser() {
+  const ua = navigator.userAgent || '';
+  if (/Edg/i.test(ua)) return 'Edge';
+  if (/Chrome/i.test(ua) && !/Edg/i.test(ua)) return 'Chrome';
+  if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) return 'Safari';
+  if (/Firefox/i.test(ua)) return 'Firefox';
+  return 'Navigateur Web';
+}
+
+function trackStatsEvent(eventType, extra = {}) {
+  try {
+    const payload = {
+      type: eventType, // 'visit' | 'download'
+      clientId: getOrCreateClientId(),
+      platform: detectPlatform(),
+      browser: detectBrowser(),
+      screen: `${window.screen?.width || 0}x${window.screen?.height || 0}`,
+      language: navigator.language || 'fr',
+      referrer: document.referrer || 'Direct',
+      path: window.location.pathname,
+      ...extra
+    };
+
+    fetch('/api/stats', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true
+    }).catch(() => {});
+  } catch (e) {}
+}
+
+function initStatsTracking() {
+  // Envoi de la visite : 1 fois toutes les 30 minutes max par appareil
+  const lastVisit = parseInt(localStorage.getItem('blink_last_visit_ts') || '0', 10);
+  const now = Date.now();
+  if (now - lastVisit > 30 * 60 * 1000) {
+    localStorage.setItem('blink_last_visit_ts', String(now));
+    trackStatsEvent('visit');
+  }
+
+  // Listener pour le lien alternatif sous le Hero
+  const heroAlt = document.getElementById('heroAltLink');
+  if (heroAlt) {
+    heroAlt.addEventListener('click', () => {
+      const isWin = typeof navigator !== 'undefined' && /Win/i.test(navigator.userAgent || navigator.platform);
+      const altFile = isWin ? 'Blink.dmg' : 'Blink-Setup.exe';
+      const altPlat = isWin ? 'macOS' : 'Windows';
+      trackStatsEvent('download', {
+        file: altFile,
+        platform: altPlat
+      });
+    });
+  }
+}
+
 
 
