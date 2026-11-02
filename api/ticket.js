@@ -28,8 +28,8 @@ module.exports = async (req, res) => {
   }
   body = body || {};
 
-  // Route 1: GET (Status check, ticket sync)
-  if (req.method === 'GET') {
+  // Route 1: GET / HEAD (Status check, ticket sync)
+  if (req.method === 'GET' || req.method === 'HEAD') {
     try {
       const target = `${BACKEND_URL}/ticket/${subpath}`;
       const ctrl = new AbortController();
