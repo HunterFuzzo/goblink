@@ -1,7 +1,7 @@
 {
-  "version": "1.1.1",
-  "publishedAt": "2026-11-02T15:00:00Z",
-  "notes": "Mise à jour automatique : nouveau logo squircle, liaison d'abonnement Stripe par email en 1 clic, bot support optimisé.",
+  "version": "1.2.0",
+  "publishedAt": "2026-11-02T16:00:00Z",
+  "notes": "Mise à jour v1.2.0 : Système d'auto-update OTA transparent, nouveau logo squircle, liaison d'abonnement Stripe par email en 1 clic.",
   "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
   "fallbackBundleUrl": "https://raw.githubusercontent.com/HunterFuzzo/goblink/main/updates/bundle-latest.zip"
 }
