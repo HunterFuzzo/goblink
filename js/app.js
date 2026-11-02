@@ -17,7 +17,7 @@ const MAC_DOWNLOAD_URL = (typeof window !== 'undefined' && window.location.proto
   ? "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink.dmg"
   : "/download/mac";
 const WIN_DOWNLOAD_URL = (typeof window !== 'undefined' && window.location.protocol === 'file:')
-  ? "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink-Setup.exe"
+  ? "/downloads/Blink-Setup.exe"
   : "/download/windows";
 
 const TRANSLATIONS = {

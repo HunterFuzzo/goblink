@@ -17,7 +17,7 @@ const MAC_DOWNLOAD_URL = (typeof window !== 'undefined' && window.location.proto
   ? "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink.dmg"
   : "/download/mac";
 const WIN_DOWNLOAD_URL = (typeof window !== 'undefined' && window.location.protocol === 'file:')
-  ? "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink-Setup.exe"
+  ? "/downloads/Blink-Setup.exe"
   : "/download/windows";
 
 const TRANSLATIONS = {
@@ -501,7 +501,7 @@ function setLanguage(lang) {
   const btnProAction = document.getElementById('btnProAction');
   if (btnProAction) {
     btnProAction.textContent = t.pricing.proBtn;
-    btnProAction.href = STRIPE_LINKS.pro[currentBillingPeriod];
+    btnProAction.href = getCheckoutUrl(STRIPE_LINKS.pro[currentBillingPeriod]);
   }
 
   const planProFeatures = document.getElementById('planProFeatures');
@@ -537,7 +537,7 @@ function setLanguage(lang) {
   const btnMaxAction = document.getElementById('btnMaxAction');
   if (btnMaxAction) {
     btnMaxAction.textContent = t.pricing.maxBtn;
-    btnMaxAction.href = STRIPE_LINKS.max[currentBillingPeriod];
+    btnMaxAction.href = getCheckoutUrl(STRIPE_LINKS.max[currentBillingPeriod]);
   }
 
   const planMaxFeatures = document.getElementById('planMaxFeatures');
@@ -780,11 +780,22 @@ function initButtons() {
     document.getElementById('menuSubscribe'),
     document.getElementById('btnProAction')
   ];
+  function getCheckoutUrl(baseLink) {
+    try {
+      const cId = getOrCreateClientId().replace(/^#/, '');
+      const u = new URL(baseLink);
+      u.searchParams.set('client_reference_id', cId);
+      return u.toString();
+    } catch (e) {
+      return baseLink;
+    }
+  }
+
   proBtns.forEach(btn => {
     if (btn) {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        window.open(STRIPE_LINKS.pro[currentBillingPeriod], '_blank');
+        window.open(getCheckoutUrl(STRIPE_LINKS.pro[currentBillingPeriod]), '_blank');
       });
     }
   });
@@ -793,7 +804,7 @@ function initButtons() {
   if (maxBtn) {
     maxBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      window.open(STRIPE_LINKS.max[currentBillingPeriod], '_blank');
+      window.open(getCheckoutUrl(STRIPE_LINKS.max[currentBillingPeriod]), '_blank');
     });
   }
 
@@ -862,7 +873,7 @@ function updatePricingUI() {
   }
   const btnProAction = document.getElementById('btnProAction');
   if (btnProAction) {
-    btnProAction.href = STRIPE_LINKS.pro[currentBillingPeriod];
+    btnProAction.href = getCheckoutUrl(STRIPE_LINKS.pro[currentBillingPeriod]);
   }
 
   // Max Card Pricing
@@ -879,7 +890,7 @@ function updatePricingUI() {
   }
   const btnMaxAction = document.getElementById('btnMaxAction');
   if (btnMaxAction) {
-    btnMaxAction.href = STRIPE_LINKS.max[currentBillingPeriod];
+    btnMaxAction.href = getCheckoutUrl(STRIPE_LINKS.max[currentBillingPeriod]);
   }
 }
 

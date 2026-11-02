@@ -13,12 +13,12 @@
     },
     {
       "source": "/download/windows",
-      "destination": "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink-Setup.exe",
+      "destination": "/downloads/Blink-Setup.exe",
       "permanent": false
     },
     {
       "source": "/download/win",
-      "destination": "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink-Setup.exe",
+      "destination": "/downloads/Blink-Setup.exe",
       "permanent": false
     },
     {
@@ -28,7 +28,7 @@
     },
     {
       "source": "/Blink-Setup.exe",
-      "destination": "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink-Setup.exe",
+      "destination": "/downloads/Blink-Setup.exe",
       "permanent": false
     },
     {
