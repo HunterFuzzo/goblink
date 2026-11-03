@@ -22,7 +22,7 @@
   <meta http-equiv="Expires" content="0">
   
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=2.4.0">
+  <link rel="stylesheet" href="css/styles.css?v=2.5.0">
 </head>
 <body>
 
@@ -53,7 +53,7 @@
           <span class="menu-label">Log in</span>
         </button>
 
-        <button class="menu-item yellow" id="menuSubscribe">
+        <button class="menu-item yellow" id="menuSubscribe" onclick="handleMenuSubscribeClick(event)">
           <span class="menu-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -522,53 +522,76 @@
 
   <!-- Web Auth Modal (Connexion / Inscription par Email OTP) -->
   <div class="modal-backdrop" id="webAuthModal">
-    <div class="modal-box" style="max-width: 420px; text-align: center;">
+    <div class="modal-box auth-modal-box" style="max-width: 420px; text-align: center;">
       <button class="modal-close" id="webAuthClose" aria-label="Fermer">&times;</button>
       
       <!-- Step 1: Entrer Email -->
-      <div id="webAuthStepEmail">
-        <div style="width: 48px; height: 48px; margin: 0 auto 16px; background: rgba(255,255,255,0.06); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-            <polyline points="22,6 12,13 2,6"></polyline>
-          </svg>
+      <div id="webAuthStepEmail" class="auth-step">
+        <div class="auth-header">
+          <div class="auth-icon-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </div>
+          <h3 class="auth-title" id="webAuthTitle">Connexion à Blink</h3>
+          <p class="auth-subtitle" id="webAuthDesc">
+            Entrez votre adresse email pour recevoir votre code d'accès sécurisé à 6 chiffres.
+          </p>
         </div>
-        <h3 class="modal-title" id="webAuthTitle" style="margin-bottom: 8px;">Connexion à Blink</h3>
-        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.4;" id="webAuthDesc">
-          Entrez votre adresse email pour recevoir votre code d'accès sécurisé à 6 chiffres.
-        </p>
-        <div style="text-align: left; margin-bottom: 16px;">
-          <label style="display: block; font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px;">Adresse email</label>
-          <input type="email" id="webAuthEmailInput" placeholder="nom@exemple.com" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 11px 14px; font-size: 14px; color: #fff; outline: none; transition: border-color 0.2s;">
+
+        <div class="auth-form-group">
+          <label class="auth-label" for="webAuthEmailInput">Adresse email</label>
+          <div class="auth-input-wrapper">
+            <input type="email" class="auth-input" id="webAuthEmailInput" placeholder="nom@exemple.com" autocomplete="email" spellcheck="false" required>
+          </div>
         </div>
-        <div id="webAuthEmailError" style="display: none; color: #ff453a; font-size: 12px; margin-bottom: 14px;"></div>
-        <button id="btnWebSendCode" style="width: 100%; background: #ffffff; color: #000000; border: none; padding: 12px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s;">
-          Envoyer le code →
-        </button>
+
+        <div id="webAuthEmailError" class="auth-feedback" style="display: none; color: #ff453a;"></div>
+
+        <div class="auth-actions">
+          <button class="auth-btn-primary" id="btnWebSendCode">
+            <span>Recevoir le code</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <!-- Step 2: Entrer le code à 6 chiffres -->
-      <div id="webAuthStepCode" style="display: none;">
-        <div style="width: 48px; height: 48px; margin: 0 auto 16px; background: rgba(52, 199, 89, 0.12); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #34c759;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-          </svg>
+      <div id="webAuthStepCode" class="auth-step" style="display: none;">
+        <div class="auth-header">
+          <div class="auth-icon-badge success">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <h3 class="auth-title">Code de vérification</h3>
+          <p class="auth-subtitle">
+            Un code à 6 chiffres a été envoyé à <strong id="webAuthTargetEmail"></strong>
+          </p>
         </div>
-        <h3 class="modal-title" style="margin-bottom: 8px;">Code de vérification</h3>
-        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.4;">
-          Un code à 6 chiffres a été envoyé à <strong id="webAuthTargetEmail" style="color:#fff;"></strong>
-        </p>
-        <div style="margin-bottom: 16px;">
-          <input type="text" id="webAuthCodeInput" maxlength="6" placeholder="123456" inputmode="numeric" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 12px; font-size: 24px; font-weight: 700; letter-spacing: 8px; text-align: center; color: #34c759; outline: none; font-family: monospace;">
+
+        <div class="auth-form-group">
+          <label class="auth-label" for="webAuthCodeInput">Code à 6 chiffres</label>
+          <div class="auth-input-wrapper">
+            <input type="text" class="auth-input otp" id="webAuthCodeInput" maxlength="6" placeholder="••••••" inputmode="numeric" autocomplete="one-time-code">
+          </div>
         </div>
-        <div id="webAuthCodeError" style="display: none; color: #ff453a; font-size: 12px; margin-bottom: 14px;"></div>
-        <button id="btnWebVerifyCode" style="width: 100%; background: #34c759; color: #000000; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; margin-bottom: 12px;">
-          Valider et se connecter
-        </button>
-        <button id="btnWebBackEmail" style="background: transparent; border: none; color: var(--text-muted); font-size: 12px; cursor: pointer; text-decoration: underline;">
-          Modifier l'adresse email
-        </button>
+
+        <div id="webAuthCodeError" class="auth-feedback" style="display: none; color: #ff453a;"></div>
+
+        <div class="auth-actions-stacked">
+          <button class="auth-btn-primary success" id="btnWebVerifyCode">
+            <span>Valider et se connecter</span>
+          </button>
+          <div class="auth-actions-secondary" style="justify-content: center;">
+            <button class="auth-btn-text" id="btnWebBackEmail">← Modifier l'adresse email</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -624,6 +647,6 @@
   </div>
 
   <!-- Script -->
-  <script src="js/app.js?v=2.4.0"></script>
+  <script src="js/app.js?v=2.5.0"></script>
 </body>
 </html>

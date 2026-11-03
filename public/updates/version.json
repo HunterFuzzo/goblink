@@ -1,0 +1,7 @@
+{
+  "version": "1.2.1",
+  "publishedAt": "2026-11-03T11:55:00Z",
+  "notes": "Mise à jour v1.2.1 : Authentification par compte email & code sécurisé, liaison multi-plateformes, interface impeccable.",
+  "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
+  "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip"
+}

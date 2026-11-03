@@ -1,7 +1,7 @@
 {
-  "version": "1.3.0",
-  "publishedAt": "2026-11-03T09:30:00Z",
-  "notes": "Mise à jour v1.3.0 : Système de compte par email sécurisé, élimination complète de l'identifiant matériel, protection anti-partage avec session active unique.",
+  "version": "1.2.1",
+  "publishedAt": "2026-11-03T11:55:00Z",
+  "notes": "Mise à jour v1.2.1 : Authentification par compte email & code sécurisé, liaison multi-plateformes, interface impeccable.",
   "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
   "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip"
 }

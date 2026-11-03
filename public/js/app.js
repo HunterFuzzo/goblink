@@ -610,6 +610,9 @@ function setLanguage(lang) {
   if (btnCheckLicense) btnCheckLicense.textContent = t.modal.checkBtn;
 
   updatePricingUI();
+  if (typeof window.updateNavAuthUI === 'function') {
+    window.updateNavAuthUI();
+  }
 }
 
 function toggleMenuDropdown(e) {
@@ -799,9 +802,13 @@ function initButtons() {
     }
   });
 
-  // Subscribe buttons (Stripe checkout)
+  // Subscribe buttons (Stripe checkout for pricing cards)
+  const menuSubscribeBtn = document.getElementById('menuSubscribe');
+  if (menuSubscribeBtn) {
+    menuSubscribeBtn.onclick = (e) => handleMenuSubscribeClick(e);
+  }
+
   const proBtns = [
-    document.getElementById('menuSubscribe'),
     document.getElementById('btnProAction')
   ];
 
@@ -953,6 +960,9 @@ function initBillingToggle() {
 
   // Initial render
   updatePricingUI();
+  if (typeof window.updateNavAuthUI === 'function') {
+    window.updateNavAuthUI();
+  }
 }
 
 // --- Blink Discord Live Telemetry & Stats System ---
@@ -1145,12 +1155,29 @@ function handleMenuLoginClick(e) {
   }
 }
 
+function handleMenuSubscribeClick(e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  const menuDropdown = document.getElementById('menuDropdown');
+  const btnMenu = document.getElementById('btnMenu');
+  if (menuDropdown) menuDropdown.classList.remove('show');
+  if (btnMenu) btnMenu.classList.remove('active');
+
+  const pricing = document.getElementById('pricing');
+  if (pricing) {
+    pricing.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
 if (typeof window !== 'undefined') {
   window.openAuthModal = openAuthModal;
   window.closeAuthModal = closeAuthModal;
   window.openAccountModal = openAccountModal;
   window.closeAccountModal = closeAccountModal;
   window.handleMenuLoginClick = handleMenuLoginClick;
+  window.handleMenuSubscribeClick = handleMenuSubscribeClick;
 }
 
 function initWebAuth() {
@@ -1179,14 +1206,22 @@ function initWebAuth() {
     const email = localStorage.getItem('blink_user_email');
     const token = localStorage.getItem('blink_session_token');
     const plan = localStorage.getItem('blink_user_plan') || 'Free';
+    const role = localStorage.getItem('blink_user_role') || 'Customer';
     const textNode = menuLogin ? menuLogin.querySelector('.menu-label') : null;
+    const menuSubscribe = document.getElementById('menuSubscribe');
 
     if (email && token && textNode) {
-      textNode.innerHTML = `<span style="display:inline-flex;align-items:center;justify-content:space-between;width:100%;gap:8px;"><span>${currentLang === 'fr' ? 'Mon Compte' : 'My Account'}</span><span class="auth-badge">${plan}</span></span>`;
+      textNode.innerHTML = `<span style="display:inline-flex;align-items:center;justify-content:space-between;width:100%;gap:8px;"><span>Me</span><span class="auth-badge">${plan}</span></span>`;
     } else if (textNode) {
       textNode.textContent = currentLang === 'fr' ? 'Connexion' : 'Log in';
     }
+
+    if (menuSubscribe) {
+      const isSubscribed = Boolean(email && token && (plan === 'Pro' || plan === 'Max' || role === 'Admin'));
+      menuSubscribe.style.display = isSubscribed ? 'none' : 'flex';
+    }
   }
+  window.updateNavAuthUI = updateNavAuthUI;
 
   // Menu Login click listener
   if (menuLogin) {
@@ -1284,13 +1319,17 @@ function initWebAuth() {
           closeAuthModal();
           updateNavAuthUI();
 
+          // Smoothly scroll to the pricing / subscription section
+          const pricingSection = document.getElementById('pricing');
+          if (pricingSection) {
+            pricingSection.scrollIntoView({ behavior: 'smooth' });
+          }
+
           // If there was a pending subscription checkout, proceed to Stripe!
           if (pendingCheckoutLink) {
             const checkoutUrl = getCheckoutUrl(pendingCheckoutLink, data.user.email);
             pendingCheckoutLink = null;
             window.open(checkoutUrl, '_blank');
-          } else {
-            openAccountModal();
           }
         } else {
           webAuthCodeError.textContent = data.error || (currentLang === 'fr' ? 'Code incorrect ou expiré' : 'Invalid or expired code');
