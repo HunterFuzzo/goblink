@@ -13,6 +13,21 @@ const STRIPE_LINKS = {
 
 let currentBillingPeriod = 'yearly'; // 'yearly' (default) or 'monthly'
 
+function getCheckoutUrl(baseLink, overrideEmail = null) {
+  try {
+    const email = overrideEmail || (typeof localStorage !== 'undefined' ? localStorage.getItem('blink_user_email') : '') || '';
+    const u = new URL(baseLink);
+    if (email && email.includes('@')) {
+      u.searchParams.set('prefilled_email', email);
+      u.searchParams.set('client_reference_id', email);
+    }
+    return u.toString();
+  } catch (e) {
+    return baseLink;
+  }
+}
+if (typeof window !== 'undefined') window.getCheckoutUrl = getCheckoutUrl;
+
 const MAC_DOWNLOAD_URL = (typeof window !== 'undefined' && window.location.protocol === 'file:')
   ? "/downloads/Blink.dmg"
   : "/download/mac";
@@ -789,19 +804,6 @@ function initButtons() {
     document.getElementById('menuSubscribe'),
     document.getElementById('btnProAction')
   ];
-  function getCheckoutUrl(baseLink, overrideEmail = null) {
-    try {
-      const email = overrideEmail || localStorage.getItem('blink_user_email') || '';
-      const u = new URL(baseLink);
-      if (email && email.includes('@')) {
-        u.searchParams.set('prefilled_email', email);
-        u.searchParams.set('client_reference_id', email);
-      }
-      return u.toString();
-    } catch (e) {
-      return baseLink;
-    }
-  }
 
   function handleSubscribeFlow(planName) {
     const email = localStorage.getItem('blink_user_email');
@@ -1053,7 +1055,103 @@ function initStatsTracking() {
 // Web Authentication & Account System
 // ==========================================
 let pendingCheckoutLink = null;
-let openAuthModalGlobal = null;
+
+function openAuthModal(reasonText = null) {
+  const webAuthModal = document.getElementById('webAuthModal');
+  const webAuthStepEmail = document.getElementById('webAuthStepEmail');
+  const webAuthStepCode = document.getElementById('webAuthStepCode');
+  const webAuthEmailInput = document.getElementById('webAuthEmailInput');
+  const webAuthCodeInput = document.getElementById('webAuthCodeInput');
+  const webAuthEmailError = document.getElementById('webAuthEmailError');
+  const webAuthCodeError = document.getElementById('webAuthCodeError');
+  const descEl = document.getElementById('webAuthDesc');
+
+  if (webAuthModal) {
+    if (webAuthStepEmail) webAuthStepEmail.style.display = 'block';
+    if (webAuthStepCode) webAuthStepCode.style.display = 'none';
+    if (webAuthEmailError) webAuthEmailError.style.display = 'none';
+    if (webAuthCodeError) webAuthCodeError.style.display = 'none';
+    if (webAuthEmailInput) webAuthEmailInput.value = '';
+    if (webAuthCodeInput) webAuthCodeInput.value = '';
+
+    if (descEl) {
+      if (reasonText) {
+        descEl.textContent = reasonText;
+      } else {
+        descEl.textContent = currentLang === 'fr'
+          ? "Entrez votre adresse email pour recevoir votre code d'accès sécurisé à 6 chiffres."
+          : "Enter your email address to receive your secure 6-digit one-time code.";
+      }
+    }
+    webAuthModal.classList.add('show');
+    if (webAuthEmailInput) setTimeout(() => webAuthEmailInput.focus(), 100);
+  }
+}
+
+function closeAuthModal() {
+  const webAuthModal = document.getElementById('webAuthModal');
+  if (webAuthModal) webAuthModal.classList.remove('show');
+}
+
+function openAccountModal() {
+  const webAccountModal = document.getElementById('webAccountModal');
+  const accountModalEmail = document.getElementById('accountModalEmail');
+  const accountModalRole = document.getElementById('accountModalRole');
+  const accountModalPlan = document.getElementById('accountModalPlan');
+  const accountModalQuota = document.getElementById('accountModalQuota');
+  const btnWebManageSub = document.getElementById('btnWebManageSub');
+
+  const email = (typeof localStorage !== 'undefined' ? localStorage.getItem('blink_user_email') : '') || 'Inconnu';
+  const plan = (typeof localStorage !== 'undefined' ? localStorage.getItem('blink_user_plan') : '') || 'Free';
+  const role = (typeof localStorage !== 'undefined' ? localStorage.getItem('blink_user_role') : '') || 'Customer';
+  const left = (typeof localStorage !== 'undefined' ? localStorage.getItem('blink_searches_left') : '') || '3';
+  const max = (typeof localStorage !== 'undefined' ? localStorage.getItem('blink_searches_max') : '') || '3';
+
+  if (accountModalEmail) accountModalEmail.textContent = email;
+  if (accountModalRole) accountModalRole.textContent = role === 'Admin' ? 'Administrateur' : (currentLang === 'fr' ? 'Membre Blink' : 'Blink Member');
+  if (accountModalPlan) {
+    accountModalPlan.textContent = plan;
+    accountModalPlan.style.color = plan === 'Max' ? '#facc15' : (plan === 'Pro' ? '#34c759' : '#888888');
+  }
+  if (accountModalQuota) accountModalQuota.textContent = `${left} / ${max}`;
+
+  if (btnWebManageSub) {
+    btnWebManageSub.href = `https://billing.stripe.com/p/login/test?prefilled_email=${encodeURIComponent(email)}`;
+  }
+
+  if (webAccountModal) webAccountModal.classList.add('show');
+}
+
+function closeAccountModal() {
+  const webAccountModal = document.getElementById('webAccountModal');
+  if (webAccountModal) webAccountModal.classList.remove('show');
+}
+
+function handleMenuLoginClick(e) {
+  if (e) {
+    if (typeof e.preventDefault === 'function') e.preventDefault();
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+  }
+  const menuDropdown = document.getElementById('menuDropdown');
+  const btnMenu = document.getElementById('btnMenu');
+  if (menuDropdown) menuDropdown.classList.remove('show');
+  if (btnMenu) btnMenu.classList.remove('active');
+
+  const token = (typeof localStorage !== 'undefined') ? localStorage.getItem('blink_session_token') : null;
+  if (token) {
+    openAccountModal();
+  } else {
+    openAuthModal();
+  }
+}
+
+if (typeof window !== 'undefined') {
+  window.openAuthModal = openAuthModal;
+  window.closeAuthModal = closeAuthModal;
+  window.openAccountModal = openAccountModal;
+  window.closeAccountModal = closeAccountModal;
+  window.handleMenuLoginClick = handleMenuLoginClick;
+}
 
 function initWebAuth() {
   const menuLogin = document.getElementById('menuLogin');
@@ -1074,11 +1172,6 @@ function initWebAuth() {
   const btnWebVerifyCode = document.getElementById('btnWebVerifyCode');
   const btnWebBackEmail = document.getElementById('btnWebBackEmail');
 
-  const accountModalEmail = document.getElementById('accountModalEmail');
-  const accountModalRole = document.getElementById('accountModalRole');
-  const accountModalPlan = document.getElementById('accountModalPlan');
-  const accountModalQuota = document.getElementById('accountModalQuota');
-  const btnWebManageSub = document.getElementById('btnWebManageSub');
   const btnWebSyncSub = document.getElementById('btnWebSyncSub');
   const btnWebLogout = document.getElementById('btnWebLogout');
 
@@ -1095,77 +1188,9 @@ function initWebAuth() {
     }
   }
 
-  function openAuthModal(reasonText = null) {
-    if (webAuthModal) {
-      if (webAuthStepEmail) webAuthStepEmail.style.display = 'block';
-      if (webAuthStepCode) webAuthStepCode.style.display = 'none';
-      if (webAuthEmailError) webAuthEmailError.style.display = 'none';
-      if (webAuthCodeError) webAuthCodeError.style.display = 'none';
-      if (webAuthEmailInput) webAuthEmailInput.value = '';
-      if (webAuthCodeInput) webAuthCodeInput.value = '';
-
-      const descEl = document.getElementById('webAuthDesc');
-      if (descEl) {
-        if (reasonText) {
-          descEl.textContent = reasonText;
-        } else {
-          descEl.textContent = currentLang === 'fr'
-            ? "Entrez votre adresse email pour recevoir votre code d'accès sécurisé à 6 chiffres."
-            : "Enter your email address to receive your secure 6-digit one-time code.";
-        }
-      }
-      webAuthModal.classList.add('show');
-      if (webAuthEmailInput) setTimeout(() => webAuthEmailInput.focus(), 100);
-    }
-  }
-  openAuthModalGlobal = openAuthModal;
-
-  function closeAuthModal() {
-    if (webAuthModal) webAuthModal.classList.remove('show');
-  }
-
-  function openAccountModal() {
-    const email = localStorage.getItem('blink_user_email') || 'Inconnu';
-    const plan = localStorage.getItem('blink_user_plan') || 'Free';
-    const role = localStorage.getItem('blink_user_role') || 'Customer';
-    const left = localStorage.getItem('blink_searches_left') || '3';
-    const max = localStorage.getItem('blink_searches_max') || '3';
-
-    if (accountModalEmail) accountModalEmail.textContent = email;
-    if (accountModalRole) accountModalRole.textContent = role === 'Admin' ? 'Administrateur' : (currentLang === 'fr' ? 'Membre Blink' : 'Blink Member');
-    if (accountModalPlan) {
-      accountModalPlan.textContent = plan;
-      accountModalPlan.style.color = plan === 'Max' ? '#facc15' : (plan === 'Pro' ? '#34c759' : '#888888');
-    }
-    if (accountModalQuota) accountModalQuota.textContent = `${left} / ${max}`;
-
-    if (btnWebManageSub) {
-      btnWebManageSub.href = `https://billing.stripe.com/p/login/test?prefilled_email=${encodeURIComponent(email)}`;
-    }
-
-    if (webAccountModal) webAccountModal.classList.add('show');
-  }
-
-  function closeAccountModal() {
-    if (webAccountModal) webAccountModal.classList.remove('show');
-  }
-
-  // Menu Login / Account button click handler (inside burger menu)
+  // Menu Login click listener
   if (menuLogin) {
-    menuLogin.addEventListener('click', (e) => {
-      e.preventDefault();
-      const menuDropdown = document.getElementById('menuDropdown');
-      const btnMenu = document.getElementById('btnMenu');
-      if (menuDropdown) menuDropdown.classList.remove('show');
-      if (btnMenu) btnMenu.classList.remove('active');
-
-      const token = localStorage.getItem('blink_session_token');
-      if (token) {
-        openAccountModal();
-      } else {
-        openAuthModal();
-      }
-    });
+    menuLogin.onclick = (e) => handleMenuLoginClick(e);
   }
 
   // Close buttons

@@ -1418,7 +1418,7 @@ body {
 }
 
 .modal-backdrop.show {
-  display: flex;
+  display: flex !important;
 }
 
 .modal-box {
