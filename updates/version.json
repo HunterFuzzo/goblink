@@ -1,7 +1,8 @@
 {
-  "version": "1.2.2",
-  "publishedAt": "2026-11-03T14:30:00Z",
-  "notes": "Mise \u00e0 jour v1.2.2 : Hub de Support client int\u00e9gr\u00e9, connexion admin multi-comptes, quota illimit\u00e9 \u221e et fluidit\u00e9 des abonnements.",
+  "version": "1.2.4",
+  "publishedAt": "2026-11-03T16:30:00Z",
+  "notes": "Mise à jour v1.2.4 : Sécurité renforcée, suppression barre native macOS, layout Support Hub optimisé.",
   "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
-  "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip"
+  "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
+  "sha256": "fcfaa13d69e9215351ed10003ab4a760e1063ae5e890676ad9ec30f8174a8baa"
 }
