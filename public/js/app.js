@@ -517,7 +517,6 @@ function setLanguage(lang) {
   const btnProAction = document.getElementById('btnProAction');
   if (btnProAction) {
     btnProAction.textContent = t.pricing.proBtn;
-    btnProAction.href = getCheckoutUrl(STRIPE_LINKS.pro[currentBillingPeriod]);
   }
 
   const planProFeatures = document.getElementById('planProFeatures');
@@ -553,7 +552,6 @@ function setLanguage(lang) {
   const btnMaxAction = document.getElementById('btnMaxAction');
   if (btnMaxAction) {
     btnMaxAction.textContent = t.pricing.maxBtn;
-    btnMaxAction.href = getCheckoutUrl(STRIPE_LINKS.max[currentBillingPeriod]);
   }
 
   const planMaxFeatures = document.getElementById('planMaxFeatures');
@@ -844,21 +842,47 @@ function initButtons() {
   ];
 
   function handleSubscribeFlow(planName) {
-    const email = localStorage.getItem('blink_user_email');
+    const email = (typeof localStorage !== 'undefined') ? localStorage.getItem('blink_user_email') : null;
+    const token = (typeof localStorage !== 'undefined') ? localStorage.getItem('blink_session_token') : null;
     const baseLink = STRIPE_LINKS[planName][currentBillingPeriod];
-    if (email && email.includes('@')) {
-      window.open(getCheckoutUrl(baseLink, email), '_blank');
-    } else {
-      pendingCheckoutLink = baseLink;
-      const promptFr = "Connectez-vous avec votre adresse email pour lier automatiquement votre abonnement à votre compte Blink :";
-      const promptEn = "Sign in with your email to automatically link your subscription to your Blink account:";
+
+    // Vérification stricte : si l'utilisateur n'est pas connecté, le renvoyer d'abord vers la connexion
+    if (!email || !token || !email.includes('@')) {
+      const promptFr = "Connectez-vous ou créez votre compte pour lier automatiquement votre abonnement à votre compte Blink :";
+      const promptEn = "Sign in or create your account to automatically link your subscription to your Blink account:";
       if (typeof openAuthModalGlobal === 'function') {
         openAuthModalGlobal(currentLang === 'fr' ? promptFr : promptEn);
-      } else {
-        window.open(getCheckoutUrl(baseLink), '_blank');
+      } else if (typeof openAuthModal === 'function') {
+        openAuthModal(currentLang === 'fr' ? promptFr : promptEn);
       }
+      return;
     }
+
+    // L'utilisateur est connecté : vérifier sa formule actuelle
+    const currentPlan = ((typeof localStorage !== 'undefined' ? localStorage.getItem('blink_user_plan') : '') || 'Free').toLowerCase();
+
+    if (currentPlan === 'max' && planName === 'max') {
+      showToast(currentLang === 'fr' ? 'Vous possédez déjà la formule active Blink MAX (illimité ∞) !' : 'You already have an active Blink MAX plan (unlimited ∞)!');
+      return;
+    }
+
+    if (currentPlan === 'max' && planName === 'pro') {
+      showToast(currentLang === 'fr' ? 'Votre formule MAX inclut déjà toutes les options Pro !' : 'Your MAX plan already includes all Pro features!');
+      return;
+    }
+
+    if (currentPlan === 'pro' && planName === 'pro') {
+      showToast(currentLang === 'fr' ? 'Vous possédez déjà la formule active Blink PRO !' : 'You already have an active Blink PRO plan!');
+      return;
+    }
+
+    // Si un utilisateur Pro clique sur Max, Stripe calcule automatiquement la différence au prorata avec son email
+    window.open(getCheckoutUrl(baseLink, email), '_blank');
   }
+
+  const proBtns = [
+    document.getElementById('btnProAction')
+  ];
 
   proBtns.forEach(btn => {
     if (btn) {
@@ -940,10 +964,6 @@ function updatePricingUI() {
     planProBillingNote.textContent = proNoteVal;
     planProBillingNote.className = isYearly ? 'price-billing-note' : 'price-billing-note highlight';
   }
-  const btnProAction = document.getElementById('btnProAction');
-  if (btnProAction) {
-    btnProAction.href = getCheckoutUrl(STRIPE_LINKS.pro[currentBillingPeriod]);
-  }
 
   // Max Card Pricing
   const maxPriceVal = isYearly ? t.pricing.maxPriceYearly : t.pricing.maxPriceMonthly;
@@ -957,9 +977,10 @@ function updatePricingUI() {
     planMaxBillingNote.textContent = maxNoteVal;
     planMaxBillingNote.className = isYearly ? 'price-billing-note' : 'price-billing-note highlight';
   }
-  const btnMaxAction = document.getElementById('btnMaxAction');
-  if (btnMaxAction) {
-    btnMaxAction.href = getCheckoutUrl(STRIPE_LINKS.max[currentBillingPeriod]);
+
+  // Update dynamic button labels & state based on whether user is logged in & their active plan
+  if (typeof updatePricingButtonsForUser === 'function') {
+    updatePricingButtonsForUser();
   }
 }
 
@@ -1134,13 +1155,97 @@ function closeAuthModal() {
   if (webAuthModal) webAuthModal.classList.remove('show');
 }
 
+function showToast(msg) {
+  const toast = document.getElementById('blinkToast');
+  const toastText = document.getElementById('blinkToastText');
+  if (!toast || !toastText) return;
+  toastText.textContent = msg;
+  toast.classList.add('show');
+  if (window._blinkToastTimer) clearTimeout(window._blinkToastTimer);
+  window._blinkToastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3500);
+}
+
+function updatePricingButtonsForUser() {
+  const email = (typeof localStorage !== 'undefined') ? localStorage.getItem('blink_user_email') : null;
+  const token = (typeof localStorage !== 'undefined') ? localStorage.getItem('blink_session_token') : null;
+  const plan = ((typeof localStorage !== 'undefined' ? localStorage.getItem('blink_user_plan') : '') || 'Free').toLowerCase();
+  const isFr = currentLang === 'fr';
+
+  const btnPro = document.getElementById('btnProAction');
+  const btnMax = document.getElementById('btnMaxAction');
+
+  if (!email || !token) {
+    if (btnPro) {
+      btnPro.textContent = isFr ? "S'abonner" : "Subscribe";
+      btnPro.classList.remove('btn-current-plan');
+    }
+    if (btnMax) {
+      btnMax.textContent = isFr ? "S'abonner" : "Subscribe";
+      btnMax.classList.remove('btn-current-plan');
+    }
+    return;
+  }
+
+  if (plan === 'max') {
+    if (btnMax) {
+      btnMax.textContent = isFr ? "✓ Formule active (MAX ∞)" : "✓ Current Plan (MAX ∞)";
+      btnMax.classList.add('btn-current-plan');
+    }
+    if (btnPro) {
+      btnPro.textContent = isFr ? "Inclus dans votre Max" : "Included in Max";
+      btnPro.classList.remove('btn-current-plan');
+    }
+  } else if (plan === 'pro') {
+    if (btnPro) {
+      btnPro.textContent = isFr ? "✓ Formule active (PRO)" : "✓ Current Plan (PRO)";
+      btnPro.classList.add('btn-current-plan');
+    }
+    if (btnMax) {
+      btnMax.textContent = isFr ? "Passer à Max (Prorata)" : "Upgrade to Max (Prorated)";
+      btnMax.classList.remove('btn-current-plan');
+    }
+  } else {
+    if (btnPro) {
+      btnPro.textContent = isFr ? "S'abonner à Pro" : "Subscribe to Pro";
+      btnPro.classList.remove('btn-current-plan');
+    }
+    if (btnMax) {
+      btnMax.textContent = isFr ? "S'abonner à Max" : "Subscribe to Max";
+      btnMax.classList.remove('btn-current-plan');
+    }
+  }
+}
+
+function openBillingModal() {
+  const webBillingModal = document.getElementById('webBillingModal');
+  const billingModalSubEmail = document.getElementById('billingModalSubEmail');
+  const billingModalPlanBadge = document.getElementById('billingModalPlanBadge');
+
+  const email = (typeof localStorage !== 'undefined' ? localStorage.getItem('blink_user_email') : '') || 'compte@exemple.com';
+  const plan = (typeof localStorage !== 'undefined' ? localStorage.getItem('blink_user_plan') : '') || 'Free';
+
+  if (billingModalSubEmail) billingModalSubEmail.textContent = email;
+  if (billingModalPlanBadge) {
+    billingModalPlanBadge.textContent = plan;
+    billingModalPlanBadge.style.color = plan === 'Max' ? '#facc15' : (plan === 'Pro' ? '#34c759' : '#888888');
+  }
+
+  if (webBillingModal) webBillingModal.classList.add('show');
+}
+
+function closeBillingModal() {
+  const webBillingModal = document.getElementById('webBillingModal');
+  if (webBillingModal) webBillingModal.classList.remove('show');
+}
+
 function openAccountModal() {
   const webAccountModal = document.getElementById('webAccountModal');
   const accountModalEmail = document.getElementById('accountModalEmail');
   const accountModalRole = document.getElementById('accountModalRole');
   const accountModalPlan = document.getElementById('accountModalPlan');
   const accountModalQuota = document.getElementById('accountModalQuota');
-  const btnWebManageSub = document.getElementById('btnWebManageSub');
 
   const email = (typeof localStorage !== 'undefined' ? localStorage.getItem('blink_user_email') : '') || 'Inconnu';
   const plan = (typeof localStorage !== 'undefined' ? localStorage.getItem('blink_user_plan') : '') || 'Free';
@@ -1167,10 +1272,6 @@ function openAccountModal() {
       accountModalQuota.style.color = '#ffffff';
       accountModalQuota.style.fontSize = '13px';
     }
-  }
-
-  if (btnWebManageSub) {
-    btnWebManageSub.href = `https://billing.stripe.com/p/login/test?prefilled_email=${encodeURIComponent(email)}`;
   }
 
   if (webAccountModal) webAccountModal.classList.add('show');
@@ -1213,18 +1314,12 @@ function scrollToSubscriptions(smooth = true) {
 
   let targetScrollY;
   if (window.innerWidth > 960) {
-    // Desktop layout (cards side by side):
-    // Position so cards & action buttons at the bottom are fully framed with ~90px margin at bottom
     targetScrollY = (gridTop + gridHeight) - viewportHeight + 90;
-
-    // If screen has plenty of vertical space (e.g. large iMac/external 4K monitor), center gracefully
     const centerY = gridTop - Math.max(70, (viewportHeight - gridHeight) / 2);
     if (viewportHeight >= gridHeight + 180) {
       targetScrollY = centerY;
     }
   } else {
-    // Mobile / tablet layout (cards stacked):
-    // Scroll directly to the Pro / recommended card with sticky header clearance
     const cardPro = document.getElementById('cardPro') || target;
     const cardRect = cardPro.getBoundingClientRect();
     const cardTop = cardRect.top + currentScrollY;
@@ -1249,6 +1344,16 @@ function handleMenuSubscribeClick(e) {
   if (menuDropdown) menuDropdown.classList.remove('show');
   if (btnMenu) btnMenu.classList.remove('active');
 
+  const token = (typeof localStorage !== 'undefined') ? localStorage.getItem('blink_session_token') : null;
+  const email = (typeof localStorage !== 'undefined') ? localStorage.getItem('blink_user_email') : null;
+
+  if (!token || !email) {
+    openAuthModal(currentLang === 'fr' 
+      ? "Connectez-vous ou créez votre compte avant de souscrire à un abonnement :" 
+      : "Sign in or create your account before choosing a subscription plan:");
+    return;
+  }
+
   setTimeout(() => {
     scrollToSubscriptions(true);
   }, 40);
@@ -1259,9 +1364,13 @@ if (typeof window !== 'undefined') {
   window.closeAuthModal = closeAuthModal;
   window.openAccountModal = openAccountModal;
   window.closeAccountModal = closeAccountModal;
+  window.openBillingModal = openBillingModal;
+  window.closeBillingModal = closeBillingModal;
   window.handleMenuLoginClick = handleMenuLoginClick;
   window.handleMenuSubscribeClick = handleMenuSubscribeClick;
   window.scrollToSubscriptions = scrollToSubscriptions;
+  window.showToast = showToast;
+  window.updatePricingButtonsForUser = updatePricingButtonsForUser;
 }
 
 function initWebAuth() {
@@ -1402,18 +1511,12 @@ function initWebAuth() {
 
           closeAuthModal();
           updateNavAuthUI();
+          updatePricingButtonsForUser();
 
-          // Smoothly scroll to the subscription / plans section (descend assez pour que le bas ne soit jamais coupé)
-          setTimeout(() => {
-            scrollToSubscriptions(true);
-          }, 80);
-
-          // If there was a pending subscription checkout, proceed to Stripe!
-          if (pendingCheckoutLink) {
-            const checkoutUrl = getCheckoutUrl(pendingCheckoutLink, data.user.email);
-            pendingCheckoutLink = null;
-            window.open(checkoutUrl, '_blank');
-          }
+          // Rester sur le site en tant que connecté avec toast élégant (aucun renvoi forcé vers Stripe)
+          showToast(currentLang === 'fr' 
+            ? `✓ Connecté : ${data.user.email} (${data.user.plan || 'Gratuit'})` 
+            : `✓ Connected: ${data.user.email} (${data.user.plan || 'Free'})`);
         } else {
           webAuthCodeError.textContent = data.error || (currentLang === 'fr' ? 'Code incorrect ou expiré' : 'Invalid or expired code');
           webAuthCodeError.style.display = 'block';
@@ -1438,6 +1541,49 @@ function initWebAuth() {
     });
   }
 
+  // Manage Subscription Button (Billing & Invoices Modal)
+  const btnWebManageSub = document.getElementById('btnWebManageSub');
+  if (btnWebManageSub) {
+    btnWebManageSub.addEventListener('click', (e) => {
+      e.preventDefault();
+      const customPortal = window.STRIPE_PORTAL_URL || (typeof localStorage !== 'undefined' ? localStorage.getItem('blink_stripe_portal_url') : null);
+      if (customPortal && !customPortal.includes('/test')) {
+        const email = (typeof localStorage !== 'undefined' ? localStorage.getItem('blink_user_email') : '') || '';
+        window.open(customPortal + (customPortal.includes('?') ? '&' : '?') + `prefilled_email=${encodeURIComponent(email)}`, '_blank');
+        return;
+      }
+      openBillingModal();
+    });
+  }
+
+  const webBillingClose = document.getElementById('webBillingClose');
+  if (webBillingClose) {
+    webBillingClose.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeBillingModal();
+    });
+  }
+
+  const btnCloseBillingModal = document.getElementById('btnCloseBillingModal');
+  if (btnCloseBillingModal) {
+    btnCloseBillingModal.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeBillingModal();
+    });
+  }
+
+  const btnOpenUpgradePricing = document.getElementById('btnOpenUpgradePricing');
+  if (btnOpenUpgradePricing) {
+    btnOpenUpgradePricing.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeBillingModal();
+      closeAccountModal();
+      setTimeout(() => {
+        scrollToSubscriptions(true);
+      }, 150);
+    });
+  }
+
   // Sync Subscription
   if (btnWebSyncSub) {
     btnWebSyncSub.addEventListener('click', async () => {
@@ -1459,8 +1605,9 @@ function initWebAuth() {
           localStorage.setItem('blink_searches_max', String(data.user.searchesMax));
           localStorage.setItem('blink_user_role', data.user.userRole);
           updateNavAuthUI();
+          updatePricingButtonsForUser();
           openAccountModal();
-          alert(currentLang === 'fr' ? 'Statut du compte synchronisé avec succès !' : 'Account status synced successfully!');
+          showToast(currentLang === 'fr' ? 'Statut du compte synchronisé avec succès !' : 'Account status synced successfully!');
         } else {
           alert(data.error || (currentLang === 'fr' ? 'Impossible de synchroniser' : 'Sync failed'));
         }
@@ -1493,7 +1640,10 @@ function initWebAuth() {
       localStorage.removeItem('blink_user_role');
 
       closeAccountModal();
+      closeBillingModal();
       updateNavAuthUI();
+      updatePricingButtonsForUser();
+      showToast(currentLang === 'fr' ? 'Vous avez été déconnecté.' : 'You have been signed out.');
     });
   }
 
@@ -1512,15 +1662,18 @@ function initWebAuth() {
         localStorage.setItem('blink_searches_max', String(data.user.searchesMax));
         localStorage.setItem('blink_user_role', data.user.userRole);
         updateNavAuthUI();
+        updatePricingButtonsForUser();
       } else if (data.reason === 'concurrent_session' || !data.success) {
         localStorage.removeItem('blink_user_email');
         localStorage.removeItem('blink_session_token');
         updateNavAuthUI();
+        updatePricingButtonsForUser();
       }
     }).catch(() => {});
   }
 
   updateNavAuthUI();
+  updatePricingButtonsForUser();
 
   // Auto-open modal if URL contains ?open=account or ?open=login
   const urlParams = new URLSearchParams(window.location.search);

@@ -349,7 +349,7 @@
             </li>
           </ul>
 
-          <a href="https://buy.stripe.com/aFa14n1dh4dl5L5gXr6Ri00" class="btn-card-action primary" id="btnProAction">Subscribe</a>
+          <button type="button" class="btn-card-action primary" id="btnProAction">S'abonner</button>
         </div>
 
         <!-- Max Card -->
@@ -382,7 +382,7 @@
             </li>
           </ul>
 
-          <a href="https://buy.stripe.com/bJe00j9JNaBJa1lgXr6Ri01" class="btn-card-action" id="btnMaxAction">Subscribe</a>
+          <button type="button" class="btn-card-action" id="btnMaxAction">S'abonner</button>
         </div>
       </div>
     </section>
@@ -629,13 +629,13 @@
 
       <!-- Actions -->
       <div style="display: flex; flex-direction: column; gap: 10px;">
-        <a id="btnWebManageSub" href="https://billing.stripe.com/p/login/test" target="_blank" style="text-decoration: none; width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.08); color: #ffffff; border: 1px solid rgba(255,255,255,0.15); padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <button id="btnWebManageSub" type="button" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.08); color: #ffffff; border: 1px solid rgba(255,255,255,0.15); padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="5" width="20" height="14" rx="2"></rect>
             <line x1="2" y1="10" x2="22" y2="10"></line>
           </svg>
           Gérer mon abonnement / Facturation
-        </a>
+        </button>
         <button id="btnWebSyncSub" style="width: 100%; background: transparent; color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.08); padding: 10px; border-radius: 10px; font-size: 12px; cursor: pointer;">
           ↻ Rafraîchir mon statut
         </button>
@@ -646,7 +646,57 @@
     </div>
   </div>
 
+  <!-- Modal Facturation / Info Gestion Abonnement -->
+  <div class="modal-backdrop" id="webBillingModal">
+    <div class="modal-box" style="max-width: 440px; text-align: left;">
+      <button class="modal-close" id="webBillingClose" aria-label="Fermer">&times;</button>
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+        <div style="width: 42px; height: 42px; border-radius: 10px; background: rgba(52, 199, 89, 0.12); display: flex; align-items: center; justify-content: center; color: #34c759;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
+          </svg>
+        </div>
+        <div>
+          <h3 class="modal-title" style="margin: 0; font-size: 16px;">Facturation & Abonnement</h3>
+          <p style="margin: 2px 0 0; font-size: 12px; color: var(--text-secondary);" id="billingModalSubEmail">compte@exemple.com</p>
+        </div>
+      </div>
+
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px; margin-bottom: 16px; font-size: 13px; line-height: 1.5; color: #d4d4d8;">
+        <div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+          <span style="color: var(--text-secondary);">Formule active :</span>
+          <span id="billingModalPlanBadge" style="font-weight: 700; color: #34c759; text-transform: uppercase;">Pro</span>
+        </div>
+        <div style="height: 1px; background: rgba(255,255,255,0.06); margin-bottom: 10px;"></div>
+        <p style="margin: 0 0 8px 0; color: #a1a1aa; font-size: 12px;">
+          • Vos reçus et factures Stripe sont envoyés directement par email lors de chaque règlement.
+        </p>
+        <p style="margin: 0 0 8px 0; color: #a1a1aa; font-size: 12px;">
+          • Pour résilier ou mettre à jour votre carte bancaire, cliquez sur le bouton sécurisé <strong>« Gérer cet abonnement »</strong> dans votre email de confirmation Stripe.
+        </p>
+        <p style="margin: 0; color: #a1a1aa; font-size: 12px;">
+          • Vous possédez le <strong>PRO</strong> et souhaitez passer à <strong>MAX</strong> ? Choisissez l'offre MAX ci-dessous : Stripe calcule et facture automatiquement la <strong>différence manquante au prorata</strong> jusqu'à la fin de votre abonnement actif !
+        </p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <button id="btnOpenUpgradePricing" style="width: 100%; background: #ffffff; color: #000; border: none; padding: 11px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; transition: opacity 0.2s;">
+          Voir les offres / Changer de formule →
+        </button>
+        <button id="btnCloseBillingModal" style="width: 100%; background: transparent; color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; font-size: 12px; cursor: pointer;">
+          Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notification -->
+  <div id="blinkToast" class="blink-toast">
+    <span id="blinkToastText">Notification</span>
+  </div>
+
   <!-- Script -->
-  <script src="js/app.js?v=2.5.0"></script>
+  <script src="js/app.js?v=2.6.0"></script>
 </body>
 </html>
