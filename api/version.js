@@ -9,9 +9,9 @@ module.exports = async (req, res) => {
   }
 
   res.status(200).json({
-    "version": "1.2.2",
-    "publishedAt": "2026-11-03T14:30:00Z",
-    "notes": "Mise \u00e0 jour v1.2.2 : Hub de Support client int\u00e9gr\u00e9, connexion admin multi-comptes, quota illimit\u00e9 \u221e et fluidit\u00e9 des abonnements.",
+    "version": "1.2.3",
+    "publishedAt": "2026-11-03T15:55:00Z",
+    "notes": "Mise à jour v1.2.3 : Interface Support Hub impeccable (alignements, boutons pilules, confort typographique et synchronisation fluide).",
     "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
     "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip"
 });
