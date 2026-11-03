@@ -1123,7 +1123,20 @@ function openAccountModal() {
     accountModalPlan.textContent = plan;
     accountModalPlan.style.color = plan === 'Max' ? '#facc15' : (plan === 'Pro' ? '#34c759' : '#888888');
   }
-  if (accountModalQuota) accountModalQuota.textContent = `${left} / ${max}`;
+
+  const isMaxOrAdmin = (plan && plan.toLowerCase() === 'max') || (role && role.toLowerCase() === 'admin') || Number(max) >= 9999 || Number(left) >= 9999 || String(max).includes('9999') || String(left).includes('9999');
+
+  if (accountModalQuota) {
+    if (isMaxOrAdmin) {
+      accountModalQuota.textContent = '∞';
+      accountModalQuota.style.color = '#34c759';
+      accountModalQuota.style.fontSize = '18px';
+    } else {
+      accountModalQuota.textContent = `${left} / ${max}`;
+      accountModalQuota.style.color = '#ffffff';
+      accountModalQuota.style.fontSize = '13px';
+    }
+  }
 
   if (btnWebManageSub) {
     btnWebManageSub.href = `https://billing.stripe.com/p/login/test?prefilled_email=${encodeURIComponent(email)}`;
