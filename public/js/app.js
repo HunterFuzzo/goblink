@@ -14,7 +14,7 @@ const STRIPE_LINKS = {
 let currentBillingPeriod = 'yearly'; // 'yearly' (default) or 'monthly'
 
 const MAC_DOWNLOAD_URL = (typeof window !== 'undefined' && window.location.protocol === 'file:')
-  ? "https://github.com/HunterFuzzo/goblink/releases/download/v1.1.0/Blink.dmg"
+  ? "/downloads/Blink.dmg"
   : "/download/mac";
 const WIN_DOWNLOAD_URL = (typeof window !== 'undefined' && window.location.protocol === 'file:')
   ? "/downloads/Blink-Setup.exe"

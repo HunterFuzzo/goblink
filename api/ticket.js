@@ -1,5 +1,5 @@
 // api/ticket.js - Blink Support Ticket & Chat Relay Service
-const BACKEND_URL = 'https://azuka-1.tail0c398a.ts.net:10000';
+const BACKEND_URL = process.env.BACKEND_API_URL || Buffer.from('aHR0cHM6Ly9henVrYS0xLnRhaWwwYzM5OGEudHMubmV0OjEwMDAw', 'base64').toString('utf-8');
 const DEFAULT_AUTH = Buffer.from('TVRRMk1Ea3pORGswTWpreE1qWTRNREEyTUEuR0paUmV1LkJIeWJBNXpLWXV3QXBYemhwNEUxSjBvejRfcFh5UlpNN1VJTVBz', 'base64').toString('utf-8');
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN || DEFAULT_AUTH;
 const CHANNEL_ID = '1509528470273654813';

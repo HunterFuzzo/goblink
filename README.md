@@ -18,6 +18,6 @@ Deployable directly on Vercel at [blink.vercel.app](https://blink.vercel.app).
 
 ## Deployment to Vercel
 1. Go to [Vercel](https://vercel.com).
-2. Click **Add New Project** and import `HunterFuzzo/blink.vercel.app`.
+2. Click **Add New Project** and import `blink-org/blink-web`.
 3. Set domain to `blink.vercel.app`.
 4. Click **Deploy**.

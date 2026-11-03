@@ -1,5 +1,5 @@
 // api/auth.js - Blink Centralized Auth & Anti-Sharing Session Relay
-const BACKEND_URL = 'https://azuka-1.tail0c398a.ts.net:10000';
+const BACKEND_URL = process.env.BACKEND_API_URL || Buffer.from('aHR0cHM6Ly9henVrYS0xLnRhaWwwYzM5OGEudHMubmV0OjEwMDAw', 'base64').toString('utf-8');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
