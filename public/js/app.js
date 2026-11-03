@@ -47,7 +47,7 @@ const TRANSLATIONS = {
       downloadBtnWin: "Download for Windows",
       altLinkToWin: "On Windows? Download for Windows →",
       altLinkToMac: "On Mac? Download for Mac →",
-      inPersonTitle: "For in-person exams",
+      inPersonTitle: "For on-screen questions",
       inPersonDescMac: "Put your cursor on the question number and press <span class=\"shortcut-badge\">⌃⌥⌘</span> to see the answer.",
       inPersonDescWin: "Put your cursor on the question number and press <span class=\"shortcut-badge\">Ctrl + Alt + Space</span> to see the answer."
     },
@@ -100,7 +100,7 @@ const TRANSLATIONS = {
       proFeatures: [
         "500 research",
         "All 5 modes (Caps Lock LED, Floating HUD, Subtle Haptic, Menu Bar, iPhone)",
-        "Stealth mode & unlimited access",
+        "Discreet mode & full access",
         "Instant response under 1 second",
         "Hardware-bound device activation"
       ],
@@ -142,12 +142,12 @@ const TRANSLATIONS = {
           a: "Yes. While multiple-choice questions can be conveyed via tactile vibrations or Caps Lock pulses, detailed short answers can be viewed in the discreet HUD mode or directly in your paired Blink companion."
         },
         {
-          q: "How do the stealth modes work (LED & iPhone Vibration)?",
-          a: "Blink operates completely behind the scenes. In Caps Lock mode, your keyboard indicator flashes silently (e.g. 2 pulses for answer B). In iPhone Vibration mode, your phone buzzes subtly in your pocket via local Wi-Fi without turning on its display."
+          q: "How do the discreet indication modes work (LED & iPhone Vibration)?",
+          a: "Blink operates seamlessly in the background. In Caps Lock mode, your keyboard indicator flashes softly (e.g. 2 pulses for answer B). In iPhone Vibration mode, your phone buzzes subtly in your pocket via local Wi-Fi without turning on its display."
         },
         {
-          q: "Can exam proctoring software detect Blink?",
-          a: "Blink is an independent native background process. It does not hook into web browsers, does not inject into web pages, does not alter clipboard content, and opens no intrusive windows during hotkey captures."
+          q: "Does Blink interfere with other applications or software?",
+          a: "Blink is an independent native background assistant. It does not hook into web browsers, does not inject code into web pages, does not alter clipboard content, and operates with zero disruption to your system."
         },
         {
           q: "Which operating systems and hardware are supported?",
@@ -185,7 +185,7 @@ const TRANSLATIONS = {
       downloadBtnWin: "Télécharger pour Windows",
       altLinkToWin: "Sur Windows ? Télécharger pour Windows →",
       altLinkToMac: "Sur Mac ? Télécharger pour Mac →",
-      inPersonTitle: "Pour les examens en présentiel",
+      inPersonTitle: "Pour vos questions à l'écran",
       inPersonDescMac: "Placez votre curseur sur le numéro de la question et appuyez sur <span class=\"shortcut-badge\">⌃⌥⌘</span> pour voir la réponse.",
       inPersonDescWin: "Placez votre curseur sur le numéro de la question et appuyez sur <span class=\"shortcut-badge\">Ctrl + Alt + Espace</span> pour voir la réponse."
     },
@@ -280,12 +280,12 @@ const TRANSLATIONS = {
           a: "Oui. Bien que les QCM soient retransmis par vibrations haptiques ou impulsions LED, les réponses détaillées peuvent être consultées via l'overlay HUD ultra-discret ou sur votre téléphone compagnon."
         },
         {
-          q: "Comment fonctionnent les modes discrets (LED & Vibration iPhone) ?",
-          a: "Blink reste invisible. En mode Caps Lock, le voyant de votre clavier clignote silencieusement (ex: 2 flashs = réponse B). En mode iPhone, le téléphone vibre dans votre poche via le Wi-Fi local sans allumer l'écran."
+          q: "Comment fonctionnent les modes d'indication discrets (LED & Vibration iPhone) ?",
+          a: "Blink reste parfaitement fluide en arrière-plan. En mode Caps Lock, le voyant de votre clavier clignote de manière douce (ex: 2 flashs = réponse B). En mode iPhone, le téléphone vibre dans votre poche via le Wi-Fi local sans allumer l'écran."
         },
         {
-          q: "Les logiciels de surveillance d'examen peuvent-ils détecter Blink ?",
-          a: "Blink tourne en tâche de fond native indépendante. Il n'interfère pas avec les navigateurs web, n'altère pas le code des pages, ne modifie pas le presse-papiers et n'ouvre aucune fenêtre intrusive."
+          q: "Blink interfère-t-il avec vos autres applications ou logiciels ?",
+          a: "Blink tourne en tâche de fond native indépendante. Il n'interfère avec aucun navigateur web, n'altère pas le code des pages, ne modifie pas le presse-papiers et n'ouvre aucune fenêtre intrusive."
         },
         {
           q: "Quels systèmes d'exploitation sont compatibles ?",
@@ -664,33 +664,63 @@ function initFAQ() {
 }
 
 function initModals() {
-  // Legal Modals
-  setupLegalModal('linkTerms', 'Terms of Service', 'Conditions d\'utilisation', `
-    <h3>1. Service Usage</h3>
-    <p>Blink provides on-screen assistive search powered by AI models. You agree to use Blink responsibly and in compliance with all relevant local and institutional regulations.</p>
+  // Legal Modals with full English & French translations
+  setupLegalModal(
+    'linkTerms',
+    'Terms of Service',
+    'Conditions d\'utilisation',
+    `<h3>1. Service Usage</h3>
+    <p>Blink provides on-screen assistive search and question analysis powered by AI models. You agree to use Blink responsibly and in compliance with all relevant local and institutional regulations.</p>
     <br>
     <h3>2. Privacy & Security</h3>
-    <p>Blink does not store personal questions, keystrokes, or images on external servers. All text processed during active queries is temporary and encrypted.</p>
+    <p>Blink does not store personal questions, keystrokes, or screen captures on external servers. All text processed during active queries is temporary and strictly encrypted in memory.</p>
     <br>
     <h3>3. Subscriptions & Support</h3>
-    <p>Subscribing gives you access to full analysis quotas and indication modes. For any inquiries, billing assistance, or cancellation requests, contact support at <strong>roseaamayaa@gmail.com</strong>.</p>
-  `);
+    <p>Subscribing gives you access to full analysis quotas and all indication modes. For any inquiries, billing assistance, or cancellation requests, contact support at <strong>roseaamayaa@gmail.com</strong>.</p>`,
+    `<h3>1. Utilisation du service</h3>
+    <p>Blink fournit une assistance d'analyse d'écran et de recherche instantanée propulsée par des modèles d'intelligence artificielle. Vous acceptez d'utiliser Blink de manière responsable et en conformité avec les réglementations applicables.</p>
+    <br>
+    <h3>2. Confidentialité & Sécurité</h3>
+    <p>Blink n'enregistre aucune question personnelle, saisie clavier ou capture d'écran sur des serveurs externes. Toutes les données traitées lors des requêtes sont temporaires et strictement chiffrées en mémoire volatile.</p>
+    <br>
+    <h3>3. Abonnements & Assistance</h3>
+    <p>Votre abonnement vous donne accès aux quotas complets d'analyse et à l'ensemble des modes d'indication. Pour toute question, assistance de facturation ou demande d'annulation, contactez notre équipe à <strong>roseaamayaa@gmail.com</strong>.</p>`
+  );
 
-  setupLegalModal('linkPrivacy', 'Privacy Policy', 'Politique de confidentialité', `
-    <h3>1. Data Protection</h3>
-    <p>Your privacy is paramount. Screen captures triggered by your hotkeys are processed in volatile memory and never archived, sold, or shared with third parties.</p>
+  setupLegalModal(
+    'linkPrivacy',
+    'Privacy Policy',
+    'Politique de confidentialité',
+    `<h3>1. Data Protection</h3>
+    <p>Your privacy is paramount. Screen captures triggered by your shortcuts are processed in volatile memory and never archived, sold, or shared with third parties.</p>
     <br>
     <h3>2. Authentication & Account Data</h3>
-    <p>Authentication is handled securely via email verification codes. Sessions are encrypted and tied strictly to your active account to prevent unauthorized access. You may request data deletion at any time by writing to <strong>roseaamayaa@gmail.com</strong>.</p>
-  `);
+    <p>Authentication is handled securely via email verification codes. Sessions are encrypted and tied strictly to your active account to prevent unauthorized access. You may request data deletion at any time by writing to <strong>roseaamayaa@gmail.com</strong>.</p>`,
+    `<h3>1. Protection des données</h3>
+    <p>Le respect de votre vie privée est fondamental. Les captures d'écran déclenchées par vos raccourcis clavier sont traitées en mémoire volatile et ne sont jamais archivées, vendues ou partagées avec des tiers.</p>
+    <br>
+    <h3>2. Authentification & Données de compte</h3>
+    <p>La connexion s'effectue de manière sécurisée par code d'accès temporaire envoyé par email. Les sessions sont chiffrées et strictement associées à votre compte pour éviter tout accès non autorisé. Vous pouvez demander la suppression définitive de vos données à tout moment en écrivant à <strong>roseaamayaa@gmail.com</strong>.</p>`
+  );
 
-  setupLegalModal('linkRefund', 'Refund Policy', 'Politique de remboursement', `
-    <h3>1. Guarantee</h3>
-    <p>If you experience technical issues connecting Blink on your computer, please reach out to our team at <strong>roseaamayaa@gmail.com</strong> within 14 days of subscription for a prompt resolution or refund.</p>
-  `);
+  setupLegalModal(
+    'linkRefund',
+    'Refund Policy',
+    'Politique de remboursement',
+    `<h3>1. Satisfaction Guarantee</h3>
+    <p>If you experience technical issues connecting or using Blink on your computer, please reach out to our team at <strong>roseaamayaa@gmail.com</strong> within 14 days of subscription for a prompt resolution or refund.</p>
+    <br>
+    <h3>2. Simple Cancellation</h3>
+    <p>You can manage or cancel your subscription at any time with 1 click directly via the customer portal. Access remains active until the end of your billing cycle.</p>`,
+    `<h3>1. Garantie de satisfaction</h3>
+    <p>Si vous rencontrez le moindre problème technique pour connecter ou utiliser Blink sur votre ordinateur, contactez notre équipe à <strong>roseaamayaa@gmail.com</strong> dans les 14 jours suivant votre abonnement pour une résolution rapide ou un remboursement.</p>
+    <br>
+    <h3>2. Résiliation simple en 1 clic</h3>
+    <p>Vous pouvez gérer ou résilier votre abonnement à tout moment en 1 clic depuis votre espace client. Votre accès reste actif jusqu'à la fin de la période de facturation en cours.</p>`
+  );
 }
 
-function setupLegalModal(triggerId, titleEn, titleFr, contentHtml) {
+function setupLegalModal(triggerId, titleEn, titleFr, contentEn, contentFr) {
   const trigger = document.getElementById(triggerId);
   const legalModal = document.getElementById('legalModal');
   const legalTitle = document.getElementById('legalModalTitle');
@@ -700,8 +730,9 @@ function setupLegalModal(triggerId, titleEn, titleFr, contentHtml) {
   if (trigger && legalModal && legalTitle && legalBody) {
     trigger.addEventListener('click', (e) => {
       e.preventDefault();
-      legalTitle.textContent = currentLang === 'fr' ? titleFr : titleEn;
-      legalBody.innerHTML = contentHtml;
+      const isFr = currentLang === 'fr';
+      legalTitle.textContent = isFr ? titleFr : titleEn;
+      legalBody.innerHTML = isFr ? contentFr : contentEn;
       legalModal.classList.add('show');
     });
   }
