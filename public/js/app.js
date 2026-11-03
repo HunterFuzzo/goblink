@@ -674,7 +674,7 @@ function initModals() {
     <p>Blink does not store personal questions, keystrokes, or screen captures on external servers. All text processed during active queries is temporary and strictly encrypted in memory.</p>
     <br>
     <h3>3. Subscriptions & Support</h3>
-    <p>Subscribing gives you access to full analysis quotas and all indication modes. For any inquiries, billing assistance, or cancellation requests, contact support at <strong>support@thisisblink.app</strong>.</p>`,
+    <p>Subscribing gives you access to full analysis quotas and all indication modes. For any inquiries, billing assistance, or cancellation requests, contact support at <strong>roseaamayaa@gmail.com</strong>.</p>`,
     `<h3>1. Utilisation du service</h3>
     <p>Blink fournit une assistance d'analyse d'écran et de recherche instantanée propulsée par des modèles d'intelligence artificielle. Vous acceptez d'utiliser Blink de manière responsable et en conformité avec les réglementations applicables.</p>
     <br>
@@ -682,7 +682,7 @@ function initModals() {
     <p>Blink n'enregistre aucune question personnelle, saisie clavier ou capture d'écran sur des serveurs externes. Toutes les données traitées lors des requêtes sont temporaires et strictement chiffrées en mémoire volatile.</p>
     <br>
     <h3>3. Abonnements & Assistance</h3>
-    <p>Votre abonnement vous donne accès aux quotas complets d'analyse et à l'ensemble des modes d'indication. Pour toute question, assistance de facturation ou demande d'annulation, contactez notre équipe à <strong>support@thisisblink.app</strong>.</p>`
+    <p>Votre abonnement vous donne accès aux quotas complets d'analyse et à l'ensemble des modes d'indication. Pour toute question, assistance de facturation ou demande d'annulation, contactez notre équipe à <strong>roseaamayaa@gmail.com</strong>.</p>`
   );
 
   setupLegalModal(
@@ -693,12 +693,12 @@ function initModals() {
     <p>Your privacy is paramount. Screen captures triggered by your shortcuts are processed in volatile memory and never archived, sold, or shared with third parties.</p>
     <br>
     <h3>2. Authentication & Account Data</h3>
-    <p>Authentication is handled securely via email verification codes. Sessions are encrypted and tied strictly to your active account to prevent unauthorized access. You may request data deletion at any time by writing to <strong>support@thisisblink.app</strong>.</p>`,
+    <p>Authentication is handled securely via email verification codes. Sessions are encrypted and tied strictly to your active account to prevent unauthorized access. You may request data deletion at any time by writing to <strong>roseaamayaa@gmail.com</strong>.</p>`,
     `<h3>1. Protection des données</h3>
     <p>Le respect de votre vie privée est fondamental. Les captures d'écran déclenchées par vos raccourcis clavier sont traitées en mémoire volatile et ne sont jamais archivées, vendues ou partagées avec des tiers.</p>
     <br>
     <h3>2. Authentification & Données de compte</h3>
-    <p>La connexion s'effectue de manière sécurisée par code d'accès temporaire envoyé par email. Les sessions sont chiffrées et strictement associées à votre compte pour éviter tout accès non autorisé. Vous pouvez demander la suppression définitive de vos données à tout moment en écrivant à <strong>support@thisisblink.app</strong>.</p>`
+    <p>La connexion s'effectue de manière sécurisée par code d'accès temporaire envoyé par email. Les sessions sont chiffrées et strictement associées à votre compte pour éviter tout accès non autorisé. Vous pouvez demander la suppression définitive de vos données à tout moment en écrivant à <strong>roseaamayaa@gmail.com</strong>.</p>`
   );
 
   setupLegalModal(
@@ -706,12 +706,12 @@ function initModals() {
     'Refund Policy',
     'Politique de remboursement',
     `<h3>1. Satisfaction Guarantee</h3>
-    <p>If you experience technical issues connecting or using Blink on your computer, please reach out to our team at <strong>support@thisisblink.app</strong> within 14 days of subscription for a prompt resolution or refund.</p>
+    <p>If you experience technical issues connecting or using Blink on your computer, please reach out to our team at <strong>roseaamayaa@gmail.com</strong> within 14 days of subscription for a prompt resolution or refund.</p>
     <br>
     <h3>2. Simple Cancellation</h3>
     <p>You can manage or cancel your subscription at any time with 1 click directly via the customer portal. Access remains active until the end of your billing cycle.</p>`,
     `<h3>1. Garantie de satisfaction</h3>
-    <p>Si vous rencontrez le moindre problème technique pour connecter ou utiliser Blink sur votre ordinateur, contactez notre équipe à <strong>support@thisisblink.app</strong> dans les 14 jours suivant votre abonnement pour une résolution rapide ou un remboursement.</p>
+    <p>Si vous rencontrez le moindre problème technique pour connecter ou utiliser Blink sur votre ordinateur, contactez notre équipe à <strong>roseaamayaa@gmail.com</strong> dans les 14 jours suivant votre abonnement pour une résolution rapide ou un remboursement.</p>
     <br>
     <h3>2. Résiliation simple en 1 clic</h3>
     <p>Vous pouvez gérer ou résilier votre abonnement à tout moment en 1 clic depuis votre espace client. Votre accès reste actif jusqu'à la fin de la période de facturation en cours.</p>`
