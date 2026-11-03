@@ -137,7 +137,7 @@ body {
 }
 
 .menu-dropdown.show {
-  display: flex;
+  display: flex !important;
 }
 
 @keyframes menuFadeIn {

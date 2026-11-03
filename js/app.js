@@ -597,18 +597,26 @@ function setLanguage(lang) {
   updatePricingUI();
 }
 
+function toggleMenuDropdown(e) {
+  if (e) {
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+  }
+  const menuDropdown = document.getElementById('menuDropdown');
+  const btnMenu = document.getElementById('btnMenu');
+  if (menuDropdown) {
+    const isShown = menuDropdown.classList.toggle('show');
+    if (btnMenu) btnMenu.classList.toggle('active', isShown);
+  }
+}
+window.toggleMenuDropdown = toggleMenuDropdown;
+
 function initMenuDropdown() {
   const btnMenu = document.getElementById('btnMenu');
   const menuDropdown = document.getElementById('menuDropdown');
 
   if (!btnMenu || !menuDropdown) return;
 
-  btnMenu.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isOpen = menuDropdown.classList.contains('show');
-    menuDropdown.classList.toggle('show', !isOpen);
-    btnMenu.classList.toggle('active', !isOpen);
-  });
+  btnMenu.onclick = (e) => toggleMenuDropdown(e);
 
   document.addEventListener('click', (e) => {
     if (!menuDropdown.contains(e.target) && !btnMenu.contains(e.target)) {
