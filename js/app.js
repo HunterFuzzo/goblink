@@ -645,21 +645,21 @@ function initModals() {
     <h3>2. Privacy & Security</h3>
     <p>Blink does not store personal questions, keystrokes, or images on external servers. All text processed during active queries is temporary and encrypted.</p>
     <br>
-    <h3>3. Subscriptions</h3>
-    <p>Subscribing gives you access to full analysis quotas and indication modes for the duration of the billing cycle.</p>
+    <h3>3. Subscriptions & Support</h3>
+    <p>Subscribing gives you access to full analysis quotas and indication modes. For any inquiries, billing assistance, or cancellation requests, contact support at <strong>roseaamayaa@gmail.com</strong>.</p>
   `);
 
   setupLegalModal('linkPrivacy', 'Privacy Policy', 'Politique de confidentialité', `
     <h3>1. Data Protection</h3>
-    <p>Your privacy is paramount. Screen captures triggered by your hotkeys are processed in memory and never archived or shared with advertisers.</p>
+    <p>Your privacy is paramount. Screen captures triggered by your hotkeys are processed in volatile memory and never archived, sold, or shared with third parties.</p>
     <br>
-    <h3>2. Hardware Identity</h3>
-    <p>A non-reversible cryptographic hash of your device (HWID) is generated locally solely to bind and validate your active license.</p>
+    <h3>2. Authentication & Account Data</h3>
+    <p>Authentication is handled securely via email verification codes. Sessions are encrypted and tied strictly to your active account to prevent unauthorized access. You may request data deletion at any time by writing to <strong>roseaamayaa@gmail.com</strong>.</p>
   `);
 
   setupLegalModal('linkRefund', 'Refund Policy', 'Politique de remboursement', `
     <h3>1. Guarantee</h3>
-    <p>If you experience technical issues connecting Blink on your Mac, please reach out to our team within 14 days of subscription for a prompt resolution or refund.</p>
+    <p>If you experience technical issues connecting Blink on your computer, please reach out to our team at <strong>roseaamayaa@gmail.com</strong> within 14 days of subscription for a prompt resolution or refund.</p>
   `);
 }
 
