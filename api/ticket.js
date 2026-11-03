@@ -1,13 +1,10 @@
-// api/ticket.js - Blink Support Ticket & Chat Relay Service
+// api/ticket.js - Blink Support Ticket & Chat Relay Service (Zero Discord)
 const BACKEND_URL = process.env.BACKEND_API_URL || Buffer.from('aHR0cHM6Ly9henVrYS0xLnRhaWwwYzM5OGEudHMubmV0OjEwMDAw', 'base64').toString('utf-8');
-const DEFAULT_AUTH = Buffer.from('TVRRMk1Ea3pORGswTWpreE1qWTRNREEyTUEuR0paUmV1LkJIeWJBNXpLWXV3QXBYemhwNEUxSjBvejRfcFh5UlpNN1VJTVBz', 'base64').toString('utf-8');
-const DISCORD_TOKEN = process.env.DISCORD_TOKEN || DEFAULT_AUTH;
-const CHANNEL_ID = '1509528470273654813';
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
@@ -28,7 +25,7 @@ module.exports = async (req, res) => {
   }
   body = body || {};
 
-  // Route 1: GET / HEAD (Status check, ticket sync)
+  // Route 1: GET / HEAD (Status check, all tickets for admin, ticket sync)
   if (req.method === 'GET' || req.method === 'HEAD') {
     try {
       const target = `${BACKEND_URL}/ticket/${subpath}`;
@@ -44,14 +41,18 @@ module.exports = async (req, res) => {
     } catch (err) {
       console.warn('[Ticket API] GET fallback:', err.message);
     }
-    return res.status(200).json({ success: true, activeTicket: null, lastResolved: null });
+    return res.status(200).json({ success: true, tickets: [], activeTicket: null, lastResolved: null });
   }
 
-  // Route 2: POST
+  // Route 2: POST (ticket creation, reply, resolve, reopen, logs)
   if (req.method === 'POST') {
     let target = `${BACKEND_URL}/ticket`;
     if (subpath === 'reply') {
       target = `${BACKEND_URL}/ticket/reply`;
+    } else if (subpath === 'resolve' || subpath.startsWith('resolve/')) {
+      target = `${BACKEND_URL}/ticket/resolve`;
+    } else if (subpath === 'reopen' || subpath.startsWith('reopen/')) {
+      target = `${BACKEND_URL}/ticket/reopen`;
     } else if (subpath === 'logs') {
       target = `${BACKEND_URL}/logs`;
     }
@@ -72,53 +73,29 @@ module.exports = async (req, res) => {
         return res.status(200).json(json);
       }
     } catch (err) {
-      console.error('[Ticket API] Backend failed, running emergency fallback:', err.message);
+      console.error('[Ticket API] Backend failed:', err.message);
     }
 
-    // Emergency Fallback: If backend is unreachable and user is creating a ticket, post directly to Discord
+    // Local fallback creation
     if (!subpath || subpath === 'ticket') {
-      try {
-        const { ticketId, subject, category, message, deviceId, plan } = body;
-        const msg = [
-          `🆘 **Nouveau Ticket Support Blink** (Secours direct)`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━`,
-          `• **Ticket ID** : \`#${ticketId || 'Inconnu'}\``,
-          `• **Device ID** : \`#${deviceId || 'Inconnu'}\``,
-          `• **Plan** : \`${plan || 'Free'}\``,
-          `• **Catégorie** : \`${category || 'Question'}\``,
-          `• **Sujet** : **${subject || 'Sans sujet'}**`,
-          `━━━━━━━━━━━━━━━━━━━━━━━━`,
-          `**Message :**`,
-          `${message || 'Aucun message'}`
-        ].join('\n');
-
-        const discordRes = await fetch(`https://discord.com/api/v9/channels/${CHANNEL_ID}/messages`, {
-          method: 'POST',
-          headers: {
-            'Authorization': DISCORD_TOKEN,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ content: msg })
-        });
-
-        if (discordRes.ok) {
-          return res.status(200).json({
-            success: true,
-            ticket: {
-              id: body.ticketId,
-              subject: body.subject,
-              category: body.category,
-              message: body.message,
-              reply: null,
-              thread: [{ sender: 'user', text: body.message, time: new Date().toISOString() }],
-              status: 'open',
-              createdAt: new Date().toISOString()
-            }
-          });
+      const { ticketId, subject, category, message, deviceId, plan } = body;
+      const cleanId = ticketId || ('TCK-' + Math.floor(1000 + Math.random() * 9000));
+      return res.status(200).json({
+        success: true,
+        ticket: {
+          ticketId: cleanId,
+          subject: subject || 'Support Request',
+          category: category || 'General',
+          message: message || '',
+          deviceId: deviceId || 'Inconnu',
+          plan: plan || 'Free',
+          status: 'open',
+          reply: null,
+          thread: [{ sender: 'user', text: message || '', time: new Date().toISOString() }],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         }
-      } catch (discErr) {
-        console.error('[Ticket API] Discord emergency fallback failed:', discErr.message);
-      }
+      });
     }
 
     return res.status(500).json({ success: false, error: 'Impossible de joindre le support pour le moment.' });

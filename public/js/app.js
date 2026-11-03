@@ -965,7 +965,7 @@ function initBillingToggle() {
   }
 }
 
-// --- Blink Discord Live Telemetry & Stats System ---
+// --- Blink Telemetry & Stats System ---
 function getOrCreateClientId() {
   try {
     const params = new URLSearchParams(window.location.search);
@@ -1168,6 +1168,46 @@ function handleMenuLoginClick(e) {
   }
 }
 
+function scrollToSubscriptions(smooth = true) {
+  const grid = document.querySelector('.pricing-grid');
+  const section = document.getElementById('pricing');
+  const target = grid || section;
+  if (!target) return;
+
+  const rect = target.getBoundingClientRect();
+  const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+  const gridTop = rect.top + currentScrollY;
+  const gridHeight = target.offsetHeight || 540;
+  const viewportHeight = window.innerHeight;
+
+  let targetScrollY;
+  if (window.innerWidth > 960) {
+    // Desktop layout (cards side by side):
+    // Position so cards & action buttons at the bottom are fully framed with ~90px margin at bottom
+    targetScrollY = (gridTop + gridHeight) - viewportHeight + 90;
+
+    // If screen has plenty of vertical space (e.g. large iMac/external 4K monitor), center gracefully
+    const centerY = gridTop - Math.max(70, (viewportHeight - gridHeight) / 2);
+    if (viewportHeight >= gridHeight + 180) {
+      targetScrollY = centerY;
+    }
+  } else {
+    // Mobile / tablet layout (cards stacked):
+    // Scroll directly to the Pro / recommended card with sticky header clearance
+    const cardPro = document.getElementById('cardPro') || target;
+    const cardRect = cardPro.getBoundingClientRect();
+    const cardTop = cardRect.top + currentScrollY;
+    targetScrollY = cardTop - 70;
+  }
+
+  targetScrollY = Math.max(0, Math.round(targetScrollY));
+
+  window.scrollTo({
+    top: targetScrollY,
+    behavior: smooth ? 'smooth' : 'auto'
+  });
+}
+
 function handleMenuSubscribeClick(e) {
   if (e) {
     e.preventDefault();
@@ -1178,10 +1218,9 @@ function handleMenuSubscribeClick(e) {
   if (menuDropdown) menuDropdown.classList.remove('show');
   if (btnMenu) btnMenu.classList.remove('active');
 
-  const pricing = document.getElementById('pricing');
-  if (pricing) {
-    pricing.scrollIntoView({ behavior: 'smooth' });
-  }
+  setTimeout(() => {
+    scrollToSubscriptions(true);
+  }, 40);
 }
 
 if (typeof window !== 'undefined') {
@@ -1191,6 +1230,7 @@ if (typeof window !== 'undefined') {
   window.closeAccountModal = closeAccountModal;
   window.handleMenuLoginClick = handleMenuLoginClick;
   window.handleMenuSubscribeClick = handleMenuSubscribeClick;
+  window.scrollToSubscriptions = scrollToSubscriptions;
 }
 
 function initWebAuth() {
@@ -1332,11 +1372,10 @@ function initWebAuth() {
           closeAuthModal();
           updateNavAuthUI();
 
-          // Smoothly scroll to the pricing / subscription section
-          const pricingSection = document.getElementById('pricing');
-          if (pricingSection) {
-            pricingSection.scrollIntoView({ behavior: 'smooth' });
-          }
+          // Smoothly scroll to the subscription / plans section (descend assez pour que le bas ne soit jamais coupé)
+          setTimeout(() => {
+            scrollToSubscriptions(true);
+          }, 80);
 
           // If there was a pending subscription checkout, proceed to Stripe!
           if (pendingCheckoutLink) {

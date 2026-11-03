@@ -1,10 +1,7 @@
-// api/stats.js - Blink Website Analytics & Discord Notification Service
-const DEFAULT_AUTH = Buffer.from('TVRRMk1Ea3pORGswTWpreE1qWTRNREEyTUEuR0paUmV1LkJIeWJBNXpLWXV3QXBYemhwNEUxSjBvejRfcFh5UlpNN1VJTVBz', 'base64').toString('utf-8');
-const DISCORD_TOKEN = process.env.DISCORD_TOKEN || DEFAULT_AUTH;
-const STATS_CHANNEL_ID = '1563078470488297572';
+// api/stats.js - Blink Website Analytics Relay Service (Zero Discord)
+const BACKEND_URL = process.env.BACKEND_API_URL || Buffer.from('aHR0cHM6Ly9henVrYS0xLnRhaWwwYzM5OGEudHMubmV0OjEwMDAw', 'base64').toString('utf-8');
 
 module.exports = async (req, res) => {
-  // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -20,102 +17,44 @@ module.exports = async (req, res) => {
   try {
     let body = req.body;
     if (typeof body === 'string') {
-      try {
-        body = JSON.parse(body);
-      } catch (e) {}
+      try { body = JSON.parse(body); } catch (e) {}
     }
     body = body || {};
 
-    const { type, clientId, platform, browser, file, referrer, screen, referral } = body;
-
-    // Real client IP from proxy/Vercel headers
     const forwarded = req.headers['x-forwarded-for'];
     const ip = (forwarded ? forwarded.split(',')[0].trim() : null) || 
                req.headers['x-real-ip'] || 
                req.socket?.remoteAddress || 
                'Inconnue';
 
-    // Known IP mapping to Hardware Device IDs
-    const KNOWN_DEVICE_IPS = {
-      '193.57.205.248': 'Admin'
-    };
-
-    let effectiveClientId = clientId || 'Inconnu';
-    if (KNOWN_DEVICE_IPS[ip]) {
-      effectiveClientId = `#${KNOWN_DEVICE_IPS[ip]}`;
-    }
-
-    // Geo location from Vercel edge headers
     const country = req.headers['x-vercel-ip-country'] || '';
     const city = req.headers['x-vercel-ip-city'] ? decodeURIComponent(req.headers['x-vercel-ip-city']) : '';
-    const locationStr = [city, country].filter(Boolean).join(', ') || 'Localisation non transmise';
 
-    const now = new Date();
-    const timeStr = now.toLocaleDateString('fr-FR', {
-      timeZone: 'Europe/Paris',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
+    const payload = {
+      ...body,
+      ip,
+      country,
+      city,
+      timestamp: new Date().toISOString()
+    };
 
-    let messageContent = '';
-
-    if (type === 'download') {
-      const emoji = (file && file.includes('.dmg')) ? '🍏' : 
-                    (file && file.includes('.exe')) ? '🪟' : 
-                    (file && file.includes('.ipa')) ? '📱' : 
-                    (file && file.includes('.apk')) ? '🤖' : '📦';
-      messageContent = [
-        `📥 **Nouveau Téléchargement Blink !**`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━`,
-        `• **Fichier** : ${emoji} \`${file || 'Blink.dmg'}\` (${platform || 'Inconnu'})`,
-        `• **ID PC / Appareil** : \`${effectiveClientId}\``,
-        `• **Adresse IP** : \`${ip}\``,
-        `• **Localisation** : 📍 ${locationStr}`,
-        `• **Navigateur** : ${browser || 'Inconnu'}`,
-        referral ? `• **Parrainage** : 🎁 \`${referral}\`` : null,
-        `• **Date & Heure** : 🕒 ${timeStr}`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━`
-      ].filter(Boolean).join('\n');
-    } else {
-      // Event: visit
-      messageContent = [
-        `🌐 **Nouvelle Visite sur le Site Blink**`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━`,
-        `• **ID PC / Appareil** : \`${effectiveClientId}\``,
-        `• **Adresse IP** : \`${ip}\``,
-        `• **Localisation** : 📍 ${locationStr}`,
-        `• **Système** : 💻 ${platform || 'Inconnu'}`,
-        `• **Navigateur** : ${browser || 'Inconnu'} ${screen ? `(${screen})` : ''}`,
-        referral ? `• **Parrainage** : 🎁 \`${referral}\`` : null,
-        `• **Provenance** : ${referrer && referrer !== 'Direct' ? referrer : 'Accès direct'}`,
-        `• **Date & Heure** : 🕒 ${timeStr}`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━`
-      ].filter(Boolean).join('\n');
-    }
-
-    // Direct post to Discord channel via Discord API
-    const discordRes = await fetch(`https://discord.com/api/v9/channels/${STATS_CHANNEL_ID}/messages`, {
-      method: 'POST',
-      headers: {
-        'Authorization': DISCORD_TOKEN,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ content: messageContent })
-    });
-
-    if (!discordRes.ok) {
-      const errText = await discordRes.text();
-      console.error('[Stats API] Erreur envoi Discord:', errText);
-      return res.status(500).json({ success: false, error: errText });
+    // Forward to backend
+    try {
+      const ctrl = new AbortController();
+      const timeout = setTimeout(() => ctrl.abort(), 3500);
+      await fetch(`${BACKEND_URL}/stats`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: ctrl.signal
+      });
+      clearTimeout(timeout);
+    } catch (_) {
+      // Backend silent fallback
     }
 
     return res.status(200).json({ success: true });
   } catch (err) {
-    console.error('[Stats API] Exception:', err.message);
-    return res.status(500).json({ success: false, error: err.message });
+    return res.status(200).json({ success: true });
   }
 };
