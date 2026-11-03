@@ -313,6 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDigitCycle();
   initBillingToggle();
   initStatsTracking();
+  initWebAuth();
 });
 
 function initDigitCycle() {
@@ -780,14 +781,34 @@ function initButtons() {
     document.getElementById('menuSubscribe'),
     document.getElementById('btnProAction')
   ];
-  function getCheckoutUrl(baseLink) {
+  function getCheckoutUrl(baseLink, overrideEmail = null) {
     try {
-      const cId = getOrCreateClientId().replace(/^#/, '');
+      const email = overrideEmail || localStorage.getItem('blink_user_email') || '';
       const u = new URL(baseLink);
-      u.searchParams.set('client_reference_id', cId);
+      if (email && email.includes('@')) {
+        u.searchParams.set('prefilled_email', email);
+        u.searchParams.set('client_reference_id', email);
+      }
       return u.toString();
     } catch (e) {
       return baseLink;
+    }
+  }
+
+  function handleSubscribeFlow(planName) {
+    const email = localStorage.getItem('blink_user_email');
+    const baseLink = STRIPE_LINKS[planName][currentBillingPeriod];
+    if (email && email.includes('@')) {
+      window.open(getCheckoutUrl(baseLink, email), '_blank');
+    } else {
+      pendingCheckoutLink = baseLink;
+      const promptFr = "Connectez-vous avec votre adresse email pour lier automatiquement votre abonnement à votre compte Blink :";
+      const promptEn = "Sign in with your email to automatically link your subscription to your Blink account:";
+      if (typeof openAuthModalGlobal === 'function') {
+        openAuthModalGlobal(currentLang === 'fr' ? promptFr : promptEn);
+      } else {
+        window.open(getCheckoutUrl(baseLink), '_blank');
+      }
     }
   }
 
@@ -795,7 +816,7 @@ function initButtons() {
     if (btn) {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        window.open(getCheckoutUrl(STRIPE_LINKS.pro[currentBillingPeriod]), '_blank');
+        handleSubscribeFlow('pro');
       });
     }
   });
@@ -804,7 +825,7 @@ function initButtons() {
   if (maxBtn) {
     maxBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      window.open(getCheckoutUrl(STRIPE_LINKS.max[currentBillingPeriod]), '_blank');
+      handleSubscribeFlow('max');
     });
   }
 
@@ -1017,6 +1038,341 @@ function initStatsTracking() {
         platform: altPlat
       });
     });
+  }
+}
+
+// ==========================================
+// Web Authentication & Account System
+// ==========================================
+let pendingCheckoutLink = null;
+let openAuthModalGlobal = null;
+
+function initWebAuth() {
+  const btnNavAuth = document.getElementById('btnNavAuth');
+  const navAuthLabel = document.getElementById('navAuthLabel');
+  const webAuthModal = document.getElementById('webAuthModal');
+  const webAuthClose = document.getElementById('webAuthClose');
+  const webAccountModal = document.getElementById('webAccountModal');
+  const webAccountClose = document.getElementById('webAccountClose');
+
+  const webAuthStepEmail = document.getElementById('webAuthStepEmail');
+  const webAuthStepCode = document.getElementById('webAuthStepCode');
+  const webAuthEmailInput = document.getElementById('webAuthEmailInput');
+  const webAuthCodeInput = document.getElementById('webAuthCodeInput');
+  const webAuthEmailError = document.getElementById('webAuthEmailError');
+  const webAuthCodeError = document.getElementById('webAuthCodeError');
+  const webAuthTargetEmail = document.getElementById('webAuthTargetEmail');
+
+  const btnWebSendCode = document.getElementById('btnWebSendCode');
+  const btnWebVerifyCode = document.getElementById('btnWebVerifyCode');
+  const btnWebBackEmail = document.getElementById('btnWebBackEmail');
+
+  const accountModalEmail = document.getElementById('accountModalEmail');
+  const accountModalRole = document.getElementById('accountModalRole');
+  const accountModalPlan = document.getElementById('accountModalPlan');
+  const accountModalQuota = document.getElementById('accountModalQuota');
+  const btnWebManageSub = document.getElementById('btnWebManageSub');
+  const btnWebSyncSub = document.getElementById('btnWebSyncSub');
+  const btnWebLogout = document.getElementById('btnWebLogout');
+
+  function updateNavAuthUI() {
+    const email = localStorage.getItem('blink_user_email');
+    const token = localStorage.getItem('blink_session_token');
+    const plan = localStorage.getItem('blink_user_plan') || 'Free';
+
+    if (email && token && btnNavAuth && navAuthLabel) {
+      btnNavAuth.classList.add('logged-in');
+      const shortEmail = email.split('@')[0];
+      navAuthLabel.innerHTML = `${shortEmail} <span class="auth-badge">${plan}</span>`;
+    } else if (btnNavAuth && navAuthLabel) {
+      btnNavAuth.classList.remove('logged-in');
+      navAuthLabel.textContent = currentLang === 'fr' ? 'Connexion' : 'Sign In';
+    }
+  }
+
+  function openAuthModal(reasonText = null) {
+    if (webAuthModal) {
+      if (webAuthStepEmail) webAuthStepEmail.style.display = 'block';
+      if (webAuthStepCode) webAuthStepCode.style.display = 'none';
+      if (webAuthEmailError) webAuthEmailError.style.display = 'none';
+      if (webAuthCodeError) webAuthCodeError.style.display = 'none';
+      if (webAuthEmailInput) webAuthEmailInput.value = '';
+      if (webAuthCodeInput) webAuthCodeInput.value = '';
+
+      const descEl = document.getElementById('webAuthDesc');
+      if (descEl) {
+        if (reasonText) {
+          descEl.textContent = reasonText;
+        } else {
+          descEl.textContent = currentLang === 'fr'
+            ? "Entrez votre adresse email pour recevoir votre code d'accès sécurisé à 6 chiffres."
+            : "Enter your email address to receive your secure 6-digit one-time code.";
+        }
+      }
+      webAuthModal.classList.add('show');
+      if (webAuthEmailInput) setTimeout(() => webAuthEmailInput.focus(), 100);
+    }
+  }
+  openAuthModalGlobal = openAuthModal;
+
+  function closeAuthModal() {
+    if (webAuthModal) webAuthModal.classList.remove('show');
+  }
+
+  function openAccountModal() {
+    const email = localStorage.getItem('blink_user_email') || 'Inconnu';
+    const plan = localStorage.getItem('blink_user_plan') || 'Free';
+    const role = localStorage.getItem('blink_user_role') || 'Customer';
+    const left = localStorage.getItem('blink_searches_left') || '3';
+    const max = localStorage.getItem('blink_searches_max') || '3';
+
+    if (accountModalEmail) accountModalEmail.textContent = email;
+    if (accountModalRole) accountModalRole.textContent = role === 'Admin' ? 'Administrateur' : (currentLang === 'fr' ? 'Membre Blink' : 'Blink Member');
+    if (accountModalPlan) {
+      accountModalPlan.textContent = plan;
+      accountModalPlan.style.color = plan === 'Max' ? '#facc15' : (plan === 'Pro' ? '#34c759' : '#888888');
+    }
+    if (accountModalQuota) accountModalQuota.textContent = `${left} / ${max}`;
+
+    if (btnWebManageSub) {
+      btnWebManageSub.href = `https://billing.stripe.com/p/login/test?prefilled_email=${encodeURIComponent(email)}`;
+    }
+
+    if (webAccountModal) webAccountModal.classList.add('show');
+  }
+
+  function closeAccountModal() {
+    if (webAccountModal) webAccountModal.classList.remove('show');
+  }
+
+  // Nav button click handler
+  if (btnNavAuth) {
+    btnNavAuth.addEventListener('click', (e) => {
+      e.preventDefault();
+      const token = localStorage.getItem('blink_session_token');
+      if (token) {
+        openAccountModal();
+      } else {
+        openAuthModal();
+      }
+    });
+  }
+
+  // Close buttons
+  if (webAuthClose) webAuthClose.addEventListener('click', closeAuthModal);
+  if (webAccountClose) webAccountClose.addEventListener('click', closeAccountModal);
+
+  if (webAuthModal) {
+    webAuthModal.addEventListener('click', (e) => {
+      if (e.target === webAuthModal) closeAuthModal();
+    });
+  }
+  if (webAccountModal) {
+    webAccountModal.addEventListener('click', (e) => {
+      if (e.target === webAccountModal) closeAccountModal();
+    });
+  }
+
+  // Step 1: Send OTP
+  if (btnWebSendCode) {
+    btnWebSendCode.addEventListener('click', async () => {
+      const email = (webAuthEmailInput?.value || '').trim().toLowerCase();
+      if (!email || !email.includes('@')) {
+        webAuthEmailError.textContent = currentLang === 'fr' ? 'Veuillez saisir une adresse email valide' : 'Please enter a valid email address';
+        webAuthEmailError.style.display = 'block';
+        return;
+      }
+      webAuthEmailError.style.display = 'none';
+      btnWebSendCode.disabled = true;
+      btnWebSendCode.textContent = currentLang === 'fr' ? 'Envoi en cours...' : 'Sending...';
+
+      try {
+        const res = await fetch('/api/auth/send-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok && data.success) {
+          if (webAuthTargetEmail) webAuthTargetEmail.textContent = email;
+          webAuthStepEmail.style.display = 'none';
+          webAuthStepCode.style.display = 'block';
+          if (webAuthCodeInput) {
+            webAuthCodeInput.value = '';
+            webAuthCodeInput.focus();
+          }
+        } else {
+          webAuthEmailError.textContent = data.error || (currentLang === 'fr' ? 'Erreur lors de l\'envoi du code' : 'Error sending code');
+          webAuthEmailError.style.display = 'block';
+        }
+      } catch (err) {
+        webAuthEmailError.textContent = currentLang === 'fr' ? 'Erreur de connexion au serveur' : 'Server connection error';
+        webAuthEmailError.style.display = 'block';
+      } finally {
+        btnWebSendCode.disabled = false;
+        btnWebSendCode.textContent = currentLang === 'fr' ? 'Envoyer le code →' : 'Send Code →';
+      }
+    });
+  }
+
+  // Step 2: Verify OTP
+  if (btnWebVerifyCode) {
+    btnWebVerifyCode.addEventListener('click', async () => {
+      const email = (webAuthEmailInput?.value || '').trim().toLowerCase();
+      const code = (webAuthCodeInput?.value || '').trim();
+      if (!code || code.length !== 6) {
+        webAuthCodeError.textContent = currentLang === 'fr' ? 'Entrez le code à 6 chiffres' : 'Enter the 6-digit code';
+        webAuthCodeError.style.display = 'block';
+        return;
+      }
+      webAuthCodeError.style.display = 'none';
+      btnWebVerifyCode.disabled = true;
+      btnWebVerifyCode.textContent = currentLang === 'fr' ? 'Vérification...' : 'Verifying...';
+
+      try {
+        const res = await fetch('/api/auth/verify-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, code, platform: 'web' })
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok && data.success && data.sessionToken) {
+          localStorage.setItem('blink_user_email', data.user.email);
+          localStorage.setItem('blink_session_token', data.sessionToken);
+          localStorage.setItem('blink_user_plan', data.user.plan || 'Free');
+          localStorage.setItem('blink_searches_left', String(data.user.searchesLeft !== undefined ? data.user.searchesLeft : 3));
+          localStorage.setItem('blink_searches_max', String(data.user.searchesMax || 3));
+          localStorage.setItem('blink_user_role', data.user.userRole || 'Customer');
+
+          closeAuthModal();
+          updateNavAuthUI();
+
+          // If there was a pending subscription checkout, proceed to Stripe!
+          if (pendingCheckoutLink) {
+            const checkoutUrl = getCheckoutUrl(pendingCheckoutLink, data.user.email);
+            pendingCheckoutLink = null;
+            window.open(checkoutUrl, '_blank');
+          } else {
+            openAccountModal();
+          }
+        } else {
+          webAuthCodeError.textContent = data.error || (currentLang === 'fr' ? 'Code incorrect ou expiré' : 'Invalid or expired code');
+          webAuthCodeError.style.display = 'block';
+        }
+      } catch (err) {
+        webAuthCodeError.textContent = currentLang === 'fr' ? 'Erreur de connexion' : 'Connection error';
+        webAuthCodeError.style.display = 'block';
+      } finally {
+        btnWebVerifyCode.disabled = false;
+        btnWebVerifyCode.textContent = currentLang === 'fr' ? 'Valider et se connecter' : 'Verify & Sign In';
+      }
+    });
+  }
+
+  // Back to Email button
+  if (btnWebBackEmail) {
+    btnWebBackEmail.addEventListener('click', (e) => {
+      e.preventDefault();
+      webAuthStepCode.style.display = 'none';
+      webAuthStepEmail.style.display = 'block';
+      webAuthCodeError.style.display = 'none';
+    });
+  }
+
+  // Sync Subscription
+  if (btnWebSyncSub) {
+    btnWebSyncSub.addEventListener('click', async () => {
+      const email = localStorage.getItem('blink_user_email');
+      const token = localStorage.getItem('blink_session_token');
+      if (!email || !token) return;
+
+      btnWebSyncSub.textContent = currentLang === 'fr' ? 'Synchronisation...' : 'Syncing...';
+      try {
+        const res = await fetch('/api/auth/sync-subscription', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, sessionToken: token })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.success && data.user) {
+          localStorage.setItem('blink_user_plan', data.user.plan);
+          localStorage.setItem('blink_searches_left', String(data.user.searchesLeft));
+          localStorage.setItem('blink_searches_max', String(data.user.searchesMax));
+          localStorage.setItem('blink_user_role', data.user.userRole);
+          updateNavAuthUI();
+          openAccountModal();
+          alert(currentLang === 'fr' ? 'Statut du compte synchronisé avec succès !' : 'Account status synced successfully!');
+        } else {
+          alert(data.error || (currentLang === 'fr' ? 'Impossible de synchroniser' : 'Sync failed'));
+        }
+      } catch (e) {
+        alert(currentLang === 'fr' ? 'Erreur réseau lors de la synchronisation' : 'Network error during sync');
+      } finally {
+        btnWebSyncSub.textContent = currentLang === 'fr' ? '↻ Rafraîchir mon statut' : '↻ Refresh Status';
+      }
+    });
+  }
+
+  // Logout
+  if (btnWebLogout) {
+    btnWebLogout.addEventListener('click', async () => {
+      const email = localStorage.getItem('blink_user_email');
+      const token = localStorage.getItem('blink_session_token');
+      try {
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, sessionToken: token })
+        });
+      } catch (e) {}
+
+      localStorage.removeItem('blink_user_email');
+      localStorage.removeItem('blink_session_token');
+      localStorage.removeItem('blink_user_plan');
+      localStorage.removeItem('blink_searches_left');
+      localStorage.removeItem('blink_searches_max');
+      localStorage.removeItem('blink_user_role');
+
+      closeAccountModal();
+      updateNavAuthUI();
+    });
+  }
+
+  // Silent session verification on load
+  const email = localStorage.getItem('blink_user_email');
+  const token = localStorage.getItem('blink_session_token');
+  if (email && token) {
+    fetch('/api/auth/sync-subscription', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, sessionToken: token })
+    }).then(r => r.json()).then(data => {
+      if (data.success && data.user) {
+        localStorage.setItem('blink_user_plan', data.user.plan);
+        localStorage.setItem('blink_searches_left', String(data.user.searchesLeft));
+        localStorage.setItem('blink_searches_max', String(data.user.searchesMax));
+        localStorage.setItem('blink_user_role', data.user.userRole);
+        updateNavAuthUI();
+      } else if (data.reason === 'concurrent_session' || !data.success) {
+        localStorage.removeItem('blink_user_email');
+        localStorage.removeItem('blink_session_token');
+        updateNavAuthUI();
+      }
+    }).catch(() => {});
+  }
+
+  updateNavAuthUI();
+
+  // Auto-open modal if URL contains ?open=account or ?open=login
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('open') === 'account' || urlParams.get('open') === 'login' || window.location.pathname.includes('/portal')) {
+    const token = localStorage.getItem('blink_session_token');
+    setTimeout(() => {
+      if (token) openAccountModal();
+      else openAuthModal();
+    }, 300);
   }
 }
 

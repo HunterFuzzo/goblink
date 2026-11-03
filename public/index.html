@@ -55,10 +55,22 @@
       </div>
     </div>
 
-    <!-- Language Selector Pill -->
-    <div class="lang-toggle" role="group" aria-label="Language selection">
-      <button class="lang-btn active" id="btnLangEn">EN</button>
-      <button class="lang-btn" id="btnLangFr">FR</button>
+    <!-- Right Navbar Actions: Language & Auth -->
+    <div class="nav-right" style="display: flex; align-items: center; gap: 10px;">
+      <!-- Language Selector Pill -->
+      <div class="lang-toggle" role="group" aria-label="Language selection">
+        <button class="lang-btn active" id="btnLangEn">EN</button>
+        <button class="lang-btn" id="btnLangFr">FR</button>
+      </div>
+
+      <!-- Nav Auth / Account Button -->
+      <button class="btn-nav-auth" id="btnNavAuth" aria-label="Account Login">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span id="navAuthLabel">Connexion</span>
+      </button>
     </div>
   </header>
 
@@ -506,6 +518,109 @@
       <h3 class="modal-title" id="legalModalTitle">Terms of Service</h3>
       <div class="modal-body" id="legalModalBody">
         <!-- Content inserted dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Web Auth Modal (Connexion / Inscription par Email OTP) -->
+  <div class="modal-backdrop" id="webAuthModal">
+    <div class="modal-box" style="max-width: 420px; text-align: center;">
+      <button class="modal-close" id="webAuthClose" aria-label="Fermer">&times;</button>
+      
+      <!-- Step 1: Entrer Email -->
+      <div id="webAuthStepEmail">
+        <div style="width: 48px; height: 48px; margin: 0 auto 16px; background: rgba(255,255,255,0.06); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+        </div>
+        <h3 class="modal-title" id="webAuthTitle" style="margin-bottom: 8px;">Connexion à Blink</h3>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.4;" id="webAuthDesc">
+          Entrez votre adresse email pour recevoir votre code d'accès sécurisé à 6 chiffres.
+        </p>
+        <div style="text-align: left; margin-bottom: 16px;">
+          <label style="display: block; font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px;">Adresse email</label>
+          <input type="email" id="webAuthEmailInput" placeholder="nom@exemple.com" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 11px 14px; font-size: 14px; color: #fff; outline: none; transition: border-color 0.2s;">
+        </div>
+        <div id="webAuthEmailError" style="display: none; color: #ff453a; font-size: 12px; margin-bottom: 14px;"></div>
+        <button id="btnWebSendCode" style="width: 100%; background: #ffffff; color: #000000; border: none; padding: 12px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s;">
+          Envoyer le code →
+        </button>
+      </div>
+
+      <!-- Step 2: Entrer le code à 6 chiffres -->
+      <div id="webAuthStepCode" style="display: none;">
+        <div style="width: 48px; height: 48px; margin: 0 auto 16px; background: rgba(52, 199, 89, 0.12); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #34c759;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <h3 class="modal-title" style="margin-bottom: 8px;">Code de vérification</h3>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.4;">
+          Un code à 6 chiffres a été envoyé à <strong id="webAuthTargetEmail" style="color:#fff;"></strong>
+        </p>
+        <div style="margin-bottom: 16px;">
+          <input type="text" id="webAuthCodeInput" maxlength="6" placeholder="123456" inputmode="numeric" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 12px; font-size: 24px; font-weight: 700; letter-spacing: 8px; text-align: center; color: #34c759; outline: none; font-family: monospace;">
+        </div>
+        <div id="webAuthCodeError" style="display: none; color: #ff453a; font-size: 12px; margin-bottom: 14px;"></div>
+        <button id="btnWebVerifyCode" style="width: 100%; background: #34c759; color: #000000; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; margin-bottom: 12px;">
+          Valider et se connecter
+        </button>
+        <button id="btnWebBackEmail" style="background: transparent; border: none; color: var(--text-muted); font-size: 12px; cursor: pointer; text-decoration: underline;">
+          Modifier l'adresse email
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Web Account Management Modal (Mon Compte & Abonnement) -->
+  <div class="modal-backdrop" id="webAccountModal">
+    <div class="modal-box" style="max-width: 440px;">
+      <button class="modal-close" id="webAccountClose" aria-label="Fermer">&times;</button>
+      
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+        <div style="width: 44px; height: 44px; background: rgba(255,255,255,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <div>
+          <div id="accountModalEmail" style="font-weight: 600; font-size: 15px; color: #ffffff;">email@exemple.com</div>
+          <div id="accountModalRole" style="font-size: 12px; color: var(--text-secondary);">Client Blink</div>
+        </div>
+      </div>
+
+      <!-- Statut Abonnement Card -->
+      <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span style="font-size: 13px; color: var(--text-secondary);">Formule active</span>
+          <span id="accountModalPlan" style="font-size: 13px; font-weight: 700; color: #34c759; text-transform: uppercase;">Pro</span>
+        </div>
+        <div style="height: 1px; background: rgba(255,255,255,0.06); margin-bottom: 12px;"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 13px; color: var(--text-secondary);">Recherches restantes</span>
+          <span id="accountModalQuota" style="font-size: 13px; font-weight: 600; color: #ffffff;">500 / 500</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a id="btnWebManageSub" href="https://billing.stripe.com/p/login/test" target="_blank" style="text-decoration: none; width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.08); color: #ffffff; border: 1px solid rgba(255,255,255,0.15); padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
+          </svg>
+          Gérer mon abonnement / Facturation
+        </a>
+        <button id="btnWebSyncSub" style="width: 100%; background: transparent; color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.08); padding: 10px; border-radius: 10px; font-size: 12px; cursor: pointer;">
+          ↻ Rafraîchir mon statut
+        </button>
+        <button id="btnWebLogout" style="width: 100%; background: rgba(255,69,58,0.1); color: #ff453a; border: 1px solid rgba(255,69,58,0.2); padding: 10px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer;">
+          Se déconnecter
+        </button>
       </div>
     </div>
   </div>
