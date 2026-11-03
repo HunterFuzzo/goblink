@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
 
     // Known IP mapping to Hardware Device IDs
     const KNOWN_DEVICE_IPS = {
-      '193.57.205.248': '87847 (Admin)'
+      '193.57.205.248': 'Admin'
     };
 
     let effectiveClientId = clientId || 'Inconnu';

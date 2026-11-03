@@ -54,6 +54,10 @@
   ],
   "rewrites": [
     {
+      "source": "/api/auth/(.*)",
+      "destination": "/api/auth?path=$1"
+    },
+    {
       "source": "/api/ticket/(.*)",
       "destination": "/api/ticket?path=$1"
     },

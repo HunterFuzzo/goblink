@@ -151,9 +151,9 @@ const TRANSLATIONS = {
       rights: "All rights reserved."
     },
     modal: {
-      loginTitle: "Log In with Device HWID",
-      loginDesc: "Enter your Blink license key or Device ID to view your subscription status.",
-      keyPlaceholder: "e.g. BLINK-PRO-87847",
+      loginTitle: "Log In with Email",
+      loginDesc: "Enter your account email to view your subscription status and manage your session.",
+      keyPlaceholder: "e.g. name@example.com",
       checkBtn: "Check Status",
       closeBtn: "Close"
     }
@@ -289,9 +289,9 @@ const TRANSLATIONS = {
       rights: "Tous droits réservés."
     },
     modal: {
-      loginTitle: "Connexion par Clé ou HWID",
-      loginDesc: "Entrez votre clé de licence Blink ou votre ID appareil pour vérifier votre abonnement.",
-      keyPlaceholder: "ex. BLINK-PRO-87847",
+      loginTitle: "Connexion par Email",
+      loginDesc: "Entrez votre adresse email pour vérifier votre abonnement et gérer votre session.",
+      keyPlaceholder: "ex. nom@exemple.com",
       checkBtn: "Vérifier le statut",
       closeBtn: "Fermer"
     }
