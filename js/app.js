@@ -1048,8 +1048,7 @@ let pendingCheckoutLink = null;
 let openAuthModalGlobal = null;
 
 function initWebAuth() {
-  const btnNavAuth = document.getElementById('btnNavAuth');
-  const navAuthLabel = document.getElementById('navAuthLabel');
+  const menuLogin = document.getElementById('menuLogin');
   const webAuthModal = document.getElementById('webAuthModal');
   const webAuthClose = document.getElementById('webAuthClose');
   const webAccountModal = document.getElementById('webAccountModal');
@@ -1079,14 +1078,12 @@ function initWebAuth() {
     const email = localStorage.getItem('blink_user_email');
     const token = localStorage.getItem('blink_session_token');
     const plan = localStorage.getItem('blink_user_plan') || 'Free';
+    const textNode = menuLogin ? menuLogin.querySelector('.menu-label') : null;
 
-    if (email && token && btnNavAuth && navAuthLabel) {
-      btnNavAuth.classList.add('logged-in');
-      const shortEmail = email.split('@')[0];
-      navAuthLabel.innerHTML = `${shortEmail} <span class="auth-badge">${plan}</span>`;
-    } else if (btnNavAuth && navAuthLabel) {
-      btnNavAuth.classList.remove('logged-in');
-      navAuthLabel.textContent = currentLang === 'fr' ? 'Connexion' : 'Sign In';
+    if (email && token && textNode) {
+      textNode.innerHTML = `<span style="display:inline-flex;align-items:center;justify-content:space-between;width:100%;gap:8px;"><span>${currentLang === 'fr' ? 'Mon Compte' : 'My Account'}</span><span class="auth-badge">${plan}</span></span>`;
+    } else if (textNode) {
+      textNode.textContent = currentLang === 'fr' ? 'Connexion' : 'Log in';
     }
   }
 
@@ -1145,10 +1142,15 @@ function initWebAuth() {
     if (webAccountModal) webAccountModal.classList.remove('show');
   }
 
-  // Nav button click handler
-  if (btnNavAuth) {
-    btnNavAuth.addEventListener('click', (e) => {
+  // Menu Login / Account button click handler (inside burger menu)
+  if (menuLogin) {
+    menuLogin.addEventListener('click', (e) => {
       e.preventDefault();
+      const menuDropdown = document.getElementById('menuDropdown');
+      const btnMenu = document.getElementById('btnMenu');
+      if (menuDropdown) menuDropdown.classList.remove('show');
+      if (btnMenu) btnMenu.classList.remove('active');
+
       const token = localStorage.getItem('blink_session_token');
       if (token) {
         openAccountModal();

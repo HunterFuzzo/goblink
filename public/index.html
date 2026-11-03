@@ -43,6 +43,16 @@
 
       <!-- Dropdown Menu (Screenshot 2) -->
       <div class="menu-dropdown" id="menuDropdown">
+        <button class="menu-item" id="menuLogin">
+          <span class="menu-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </span>
+          <span class="menu-label">Log in</span>
+        </button>
+
         <button class="menu-item yellow" id="menuSubscribe">
           <span class="menu-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -55,22 +65,10 @@
       </div>
     </div>
 
-    <!-- Right Navbar Actions: Language & Auth -->
-    <div class="nav-right" style="display: flex; align-items: center; gap: 10px;">
-      <!-- Language Selector Pill -->
-      <div class="lang-toggle" role="group" aria-label="Language selection">
-        <button class="lang-btn active" id="btnLangEn">EN</button>
-        <button class="lang-btn" id="btnLangFr">FR</button>
-      </div>
-
-      <!-- Nav Auth / Account Button -->
-      <button class="btn-nav-auth" id="btnNavAuth" aria-label="Account Login">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
-        <span id="navAuthLabel">Connexion</span>
-      </button>
+    <!-- Language Selector Pill -->
+    <div class="lang-toggle" role="group" aria-label="Language selection">
+      <button class="lang-btn active" id="btnLangEn">EN</button>
+      <button class="lang-btn" id="btnLangFr">FR</button>
     </div>
   </header>
 
