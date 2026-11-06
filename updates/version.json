@@ -1,8 +1,8 @@
 {
-  "version": "1.2.8",
-  "publishedAt": "2026-11-06T09:06:00Z",
-  "notes": "Mise à jour v1.2.8 : Fix fermeture intempestive côté client, synchronisation activeTicket robuste et raccourcis Entrée (envoyer) / Cmd+Entrée (saut de ligne).",
+  "version": "1.2.9",
+  "publishedAt": "2026-11-06T09:12:00Z",
+  "notes": "Mise à jour v1.2.9 : Bouton d'envoi épuré à droite de l'input (icône seule), suppression texte d'aide, et auto-transition vers le ticket suivant lors de la résolution.",
   "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
   "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
-  "sha256": "66ec151777dedaf011ef4b5c7f2041ef0661c640237954810271e5b41176e9dd"
+  "sha256": "6cb6bb60ce95dc36debaa62af02af3f341e942936bfb132d7a6033c98a4dc5db"
 }
