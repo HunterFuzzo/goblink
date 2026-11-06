@@ -1,8 +1,8 @@
 {
-  "version": "1.2.12",
-  "publishedAt": "2026-11-06T09:23:00Z",
-  "notes": "Mise à jour v1.2.12 : Centrage et élargissement de tous les onglets, démarrage élégant sur Général avec accès complet au Support via le bandeau latéral.",
+  "version": "1.2.13",
+  "publishedAt": "2026-11-06T09:31:00Z",
+  "notes": "Mise à jour v1.2.13 : Fermeture instantanée des tickets lors du clic sur Résoudre (admin et client), et pastille rouge de notification sur l'onglet Général lors de l'arrivée d'une réponse.",
   "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
   "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
-  "sha256": "a0c89a89138b42432a514265c57b8ad13bac0a8765665d481a201494904d8530"
+  "sha256": "193f4c13a65f67c44ab0bb2d0ae2d8ecc09a34281bab372935174a76e216b17c"
 }
