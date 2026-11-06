@@ -1,8 +1,8 @@
 {
-  "version": "1.2.9",
-  "publishedAt": "2026-11-06T09:12:00Z",
-  "notes": "Mise à jour v1.2.9 : Bouton d'envoi épuré à droite de l'input (icône seule), suppression texte d'aide, et auto-transition vers le ticket suivant lors de la résolution.",
+  "version": "1.2.10",
+  "publishedAt": "2026-11-06T09:16:00Z",
+  "notes": "Mise à jour v1.2.10 : En-tête des tickets 100% sur une seule ligne (ID, sujet, email, appareil, plan, date), fenêtre agrandie et cartes élargies sans wrap.",
   "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
   "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
-  "sha256": "6cb6bb60ce95dc36debaa62af02af3f341e942936bfb132d7a6033c98a4dc5db"
+  "sha256": "6b8c7442abd939dfaa23064550d0d1d2b0d011c33c05366a8492afd1249d7fd8"
 }
