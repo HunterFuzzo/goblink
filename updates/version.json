@@ -1,8 +1,8 @@
 {
-  "version": "1.2.13",
-  "publishedAt": "2026-11-06T09:31:00Z",
-  "notes": "Mise à jour v1.2.13 : Fermeture instantanée des tickets lors du clic sur Résoudre (admin et client), et pastille rouge de notification sur l'onglet Général lors de l'arrivée d'une réponse.",
+  "version": "1.2.14",
+  "publishedAt": "2026-11-06T09:47:00Z",
+  "notes": "Mise à jour v1.2.14 : Message de fermeture de ticket (admin/user), réouverture automatique lors d'une réponse support, pastille rouge de notification sur l'onglet General, affichage de l'email client et centrage harmonieux de l'interface.",
   "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
   "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
-  "sha256": "193f4c13a65f67c44ab0bb2d0ae2d8ecc09a34281bab372935174a76e216b17c"
+  "sha256": "8adc30a103c337867b9b705b4e83e37631dd58a8c55feb6427b10f1b044d95d0"
 }

@@ -1,8 +1,8 @@
 {
-  "version": "1.2.6",
-  "publishedAt": "2026-11-06T08:45:00Z",
-  "notes": "Mise à jour v1.2.6 : Support Hub impeccable (anti-collision totale, auto-sélection de ticket, placeholder masqué).",
+  "version": "1.2.14",
+  "publishedAt": "2026-11-06T09:47:00Z",
+  "notes": "Mise à jour v1.2.14 : Message de fermeture de ticket (admin/user), réouverture automatique lors d'une réponse support, pastille rouge de notification sur l'onglet General, affichage de l'email client et centrage harmonieux de l'interface.",
   "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
   "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
-  "sha256": "3d9ad919670ab529d457caf6a32ad63db2328a83052641cca16067c270ee6eea"
+  "sha256": "8adc30a103c337867b9b705b4e83e37631dd58a8c55feb6427b10f1b044d95d0"
 }
