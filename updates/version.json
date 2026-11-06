@@ -1,8 +1,8 @@
 {
-  "version": "1.2.7",
-  "publishedAt": "2026-11-06T08:59:00Z",
-  "notes": "Mise à jour v1.2.7 : Support Hub avec affichage de l'email utilisateur, layout et padding impeccables sans collision.",
+  "version": "1.2.8",
+  "publishedAt": "2026-11-06T09:06:00Z",
+  "notes": "Mise à jour v1.2.8 : Fix fermeture intempestive côté client, synchronisation activeTicket robuste et raccourcis Entrée (envoyer) / Cmd+Entrée (saut de ligne).",
   "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
   "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
-  "sha256": "4d201595ebe7b96d9a473cc6985ae483c2d33334e82915735b96bb2b6574dab3"
+  "sha256": "66ec151777dedaf011ef4b5c7f2041ef0661c640237954810271e5b41176e9dd"
 }
