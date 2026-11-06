@@ -1,8 +1,8 @@
 {
   "version": "1.2.14",
-  "publishedAt": "2026-11-06T09:47:00Z",
-  "notes": "Mise à jour v1.2.14 : Message de fermeture de ticket (admin/user), réouverture automatique lors d'une réponse support, pastille rouge de notification sur l'onglet General, affichage de l'email client et centrage harmonieux de l'interface.",
+  "publishedAt": "2026-11-06T09:50:00Z",
+  "notes": "Mise à jour v1.2.14 : Message de fermeture et réouverture sans emoji (design Swiss épuré), pastille rouge de notification, enrichissement email et centrage.",
   "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
   "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
-  "sha256": "8adc30a103c337867b9b705b4e83e37631dd58a8c55feb6427b10f1b044d95d0"
+  "sha256": "e63072368134e574adbd76abea97c409da71da99f28fb18c7953f065facaa914"
 }
