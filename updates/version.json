@@ -1,8 +1,8 @@
 {
-  "version": "1.2.10",
-  "publishedAt": "2026-11-06T09:16:00Z",
-  "notes": "Mise à jour v1.2.10 : En-tête des tickets 100% sur une seule ligne (ID, sujet, email, appareil, plan, date), fenêtre agrandie et cartes élargies sans wrap.",
+  "version": "1.2.11",
+  "publishedAt": "2026-11-06T09:20:00Z",
+  "notes": "Mise à jour v1.2.11 : Élargissement et centrage automatique de tous les onglets (Général, Abonnement, Sécurité, Mode, Compte) avec suppression des espaces vides latéraux.",
   "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
   "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
-  "sha256": "6b8c7442abd939dfaa23064550d0d1d2b0d011c33c05366a8492afd1249d7fd8"
+  "sha256": "a581569647c2818a796e48c0c1d63c3965816fdfb42df1b18c488f227d13eb92"
 }
