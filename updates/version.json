@@ -1,8 +1,8 @@
 {
-  "version": "1.2.11",
-  "publishedAt": "2026-11-06T09:20:00Z",
-  "notes": "Mise à jour v1.2.11 : Élargissement et centrage automatique de tous les onglets (Général, Abonnement, Sécurité, Mode, Compte) avec suppression des espaces vides latéraux.",
+  "version": "1.2.12",
+  "publishedAt": "2026-11-06T09:23:00Z",
+  "notes": "Mise à jour v1.2.12 : Centrage et élargissement de tous les onglets, démarrage élégant sur Général avec accès complet au Support via le bandeau latéral.",
   "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
   "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
-  "sha256": "a581569647c2818a796e48c0c1d63c3965816fdfb42df1b18c488f227d13eb92"
+  "sha256": "a0c89a89138b42432a514265c57b8ad13bac0a8765665d481a201494904d8530"
 }
