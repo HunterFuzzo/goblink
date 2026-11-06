@@ -1,8 +1,8 @@
 {
-  "version": "1.2.5",
-  "publishedAt": "2026-11-06T08:35:00Z",
-  "notes": "Mise à jour v1.2.5 : Layout Support Hub impeccable (padding anti-collision, typographie, création de ticket directe).",
+  "version": "1.2.6",
+  "publishedAt": "2026-11-06T08:45:00Z",
+  "notes": "Mise à jour v1.2.6 : Support Hub impeccable (anti-collision totale, auto-sélection de ticket, placeholder masqué).",
   "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
   "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
-  "sha256": "cca42acc1db50c8b3a26ea8728cd13e6d371b83fd9401a7769b835464c0b9200"
+  "sha256": "3d9ad919670ab529d457caf6a32ad63db2328a83052641cca16067c270ee6eea"
 }
