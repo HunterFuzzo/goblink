@@ -1,8 +1,8 @@
 {
   "version": "1.2.14",
-  "publishedAt": "2026-11-06T09:50:00Z",
-  "notes": "Mise à jour v1.2.14 : Message de fermeture et réouverture sans emoji (design Swiss épuré), pastille rouge de notification, enrichissement email et centrage.",
+  "publishedAt": "2026-11-06T09:56:00Z",
+  "notes": "Mise à jour v1.2.14 : Fermeture automatique temporisée du ticket résolu (15s) pour retour au widget initial.",
   "bundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
   "fallbackBundleUrl": "https://thisisblink.vercel.app/updates/bundle-latest.zip",
-  "sha256": "e63072368134e574adbd76abea97c409da71da99f28fb18c7953f065facaa914"
+  "sha256": "19462a19c93381f4c39f6ca61ab64b4da97bae1f60b2ad38001660ef20f0cd9c"
 }
